@@ -13,6 +13,7 @@ import loguru
 
 from agentuniverse.base.util.logging.log_type_enum import LogTypeEnum
 from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
+from agentuniverse.base.util.tracing.au_trace_manager import AuTraceManager
 
 LOG_LEVEL = Literal[
     "TRACE",
@@ -28,9 +29,12 @@ LOG_LEVEL = Literal[
 def get_context_prefix() -> str:
     """Get a dict contains log prefix info from current context and format it
     to a log prefix string."""
+    trace_dict = AuTraceManager().get_trace_dict()
     log_context = FrameworkContextManager().get_context("LOG_CONTEXT")
-    if log_context:
-        json_str = json.dumps(log_context)
+    if log_context and isinstance(log_context, dict):
+        trace_dict.update(log_context)
+    if trace_dict:
+        json_str = json.dumps(trace_dict)
         format_context_prefix = '[' + json_str[1:-1] + ']'
         return format_context_prefix
     else:

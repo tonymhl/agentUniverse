@@ -1,0 +1,15 @@
+info:
+  name: 'openai_protocol_planning_agent'
+  description: 'openai protocol planning agent'
+profile:
+  prompt_version: demo_planning_agent.cn
+  llm_model:
+    name: 'qwen_llm'
+    model_name: 'qwen-max'
+    temperature: 0.1
+memory:
+  name: 'demo_memory'
+metadata:
+  type: 'AGENT'
+  module: 'openai_protocol_app.intelligence.agentic.agent.agent_template.openai_protocol_planning_agent'
+  class: 'OpenAIProtocolPlanningAgentTemplate'

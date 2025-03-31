@@ -1,0 +1,9 @@
+id: peer_workflow
+nickname: peer workflow
+avatar: ''
+opening_speech: ''
+type: AGENT
+metadata:
+  class: AgentProduct
+  module: agentuniverse_product.base.agent_product
+  type: PRODUCT

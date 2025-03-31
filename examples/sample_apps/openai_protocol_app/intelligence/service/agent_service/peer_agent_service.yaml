@@ -1,0 +1,5 @@
+name: 'peer_agent_service'
+description: 'demo service of demo agent'
+agent: 'openai_protocol_peer_agent'
+metadata:
+  type: 'SERVICE'

@@ -1,0 +1,5 @@
+name: 'openai_service'
+description: 'demo service of demo agent'
+agent: 'openai_protocol_agent'
+metadata:
+  type: 'SERVICE'

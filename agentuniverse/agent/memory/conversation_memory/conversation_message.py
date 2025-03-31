@@ -9,10 +9,10 @@
 import uuid
 from typing import Optional, List
 
+from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 from pydantic import Field
 
 from agentuniverse.agent.memory.enum import ChatMessageEnum
-from langchain_core.prompts import HumanMessagePromptTemplate, AIMessagePromptTemplate
 from langchain_core.prompts.chat import BaseStringMessagePromptTemplate
 
 from agentuniverse.agent.memory.conversation_memory.enum import ConversationMessageSourceType, ConversationMessageEnum
@@ -53,6 +53,9 @@ class ConversationMessage(Message):
         """Convert agentUniverse(aU) message list to langchain message list """
         messages = []
         for message in message_list:
+            if message.type == ChatMessageEnum.SYSTEM.value or message.type == ChatMessageEnum.HUMAN.value or message.type == ChatMessageEnum.AI.value:
+                messages.append(message)
+                continue
             # only got agent message
             if message.target_type != ConversationMessageSourceType.AGENT.value:
                 continue
@@ -67,11 +70,16 @@ class ConversationMessage(Message):
 
     def as_langchain(self):
         """Convert the agentUniverse(aU) message class to the langchain message class."""
-        if self.type in [ConversationMessageSourceType.AGENT.value,
-                         ConversationMessageSourceType.USER.value]:
-            return HumanMessagePromptTemplate.from_template(self.content)
+        if self.type == ConversationMessageEnum.INPUT.value:
+            return HumanMessage(content=self.content)
+        elif self.type == ConversationMessageEnum.OUTPUT.value:
+            return AIMessage(content=self.content)
+        elif self.type == ChatMessageEnum.SYSTEM.value:
+            return SystemMessage(content=self.content)
+        elif self.type == ChatMessageEnum.HUMAN.value:
+            return HumanMessage(content=self.content)
         elif self.type == ChatMessageEnum.AI.value:
-            return AIMessagePromptTemplate.from_template(self.content)
+            return AIMessage(content=self.content)
         else:
             return BaseStringMessagePromptTemplate.from_template(self.content)
 

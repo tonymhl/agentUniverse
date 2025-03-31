@@ -1,0 +1,310 @@
+id: workflow_944
+name: peer workflow_workflow
+description: ''
+graph:
+  nodes:
+  - id: start-ddc389cc-607d-49db-994a-49e819db426d
+    name: 开始节点
+    description: 工作流的起始节点，用于设定启动工作流需要的信息
+    type: start
+    position:
+      x: -777.1532753288834
+      y: 95.51375059459707
+    data:
+      outputs:
+      - name: user_input
+        type: string
+        description: 用户本轮对话输入内容
+  - id: agent-2ac89663-02a5-4d12-b09b-42c3ba98d144
+    name: planning策划智能体
+    description: demo planning agent
+    type: agent
+    position:
+      x: 146.1908086253677
+      y: 100.97339424449069
+    data:
+      inputs:
+        agent_param:
+        - name: id
+          type: string
+          value:
+            type: value
+            content: demo_planning_agent
+        - name: prompt
+          type: string
+          value:
+            type: value
+            content: "需要回答的问题是: {{input}}\n"
+        input_param:
+        - type: string
+          name: input
+          value:
+            type: reference
+            content:
+            - start-ddc389cc-607d-49db-994a-49e819db426d
+            - user_input
+      outputs:
+      - name: framework
+        type: list
+  - id: tool-196165e8-4591-4974-8940-e2489c963825
+    name: 参数转换工具
+    type: tool
+    position:
+      x: 810.5682057039137
+      y: 330.28461957494073
+    data:
+      inputs:
+        tool_param:
+        - name: id
+          type: string
+          value:
+            content: param_converter
+        input_param:
+        - name: planning_result
+          type: dict
+          value:
+            type: value
+            content: ''
+        - name: framework
+          type: list
+          value:
+            type: reference
+            content:
+            - agent-2ac89663-02a5-4d12-b09b-42c3ba98d144
+            - framework
+      outputs:
+      - name: planning_result
+        type: dict
+  - id: agent-39a971c7-a8a4-47c4-9d14-17fe6d076628
+    name: executing执行智能体
+    description: demo executing agent
+    type: agent
+    position:
+      x: 1475.7057226281443
+      y: 905.8697273589737
+    data:
+      inputs:
+        agent_param:
+        - name: prompt
+          type: string
+          value:
+            type: value
+            content: "需要回答的问题是: {{input}}\n"
+        - name: id
+          type: string
+          value:
+            type: value
+            content: demo_executing_agent
+        input_param:
+        - type: string
+          name: input
+          value:
+            type: reference
+            content:
+            - start-ddc389cc-607d-49db-994a-49e819db426d
+            - user_input
+        - type: dict
+          name: planning_result
+          value:
+            type: reference
+            content:
+            - tool-196165e8-4591-4974-8940-e2489c963825
+            - planning_result
+      outputs:
+      - name: executing_result
+        type: list
+  - id: tool-ccce36d2-c723-4904-8c39-4ae2544239bf
+    name: 参数转换工具
+    type: tool
+    position:
+      x: 2144.357179332355
+      y: 1224.6589206213525
+    data:
+      inputs:
+        tool_param:
+        - name: id
+          type: string
+          value:
+            content: param_converter
+        input_param:
+        - name: executing_result
+          type: dict
+          value:
+            type: reference
+            content:
+            - agent-39a971c7-a8a4-47c4-9d14-17fe6d076628
+            - executing_result
+      outputs:
+      - name: executing_result
+        type: dict
+  - id: agent-16489913-9519-45ea-a0c2-c31cdfef6b0f
+    name: expressing表达智能体
+    description: demo expressing agent
+    type: agent
+    position:
+      x: 2834.988489953612
+      y: 1665.0113155872446
+    data:
+      inputs:
+        agent_param:
+        - name: id
+          type: string
+          value:
+            type: value
+            content: demo_expressing_agent
+        - name: prompt
+          type: string
+          value:
+            type: value
+            content: "需要回答的问题是: {{input}}\n"
+        input_param:
+        - type: string
+          name: input
+          value:
+            type: reference
+            content:
+            - start-ddc389cc-607d-49db-994a-49e819db426d
+            - user_input
+        - type: dict
+          name: executing_result
+          value:
+            type: reference
+            content:
+            - tool-ccce36d2-c723-4904-8c39-4ae2544239bf
+            - executing_result
+        outputs:
+        - name: expressing_result
+          type: dict
+      outputs:
+      - name: output
+        type: string
+  - id: tool-7495f6a3-d597-4007-bccc-992a9f255d20
+    name: 参数转换工具
+    type: tool
+    position:
+      x: 3482.3951887542853
+      y: 2010.329851314324
+    data:
+      inputs:
+        tool_param:
+        - name: id
+          type: string
+          value:
+            content: param_converter
+        input_param:
+        - name: expressing_result
+          type: dict
+          value:
+            type: value
+            content: ''
+        - name: output
+          type: string
+          value:
+            type: reference
+            content:
+            - agent-16489913-9519-45ea-a0c2-c31cdfef6b0f
+            - output
+      outputs:
+      - name: expressing_result
+        type: dict
+  - id: agent-63ad55c5-adb0-4b12-9aa3-ead18be0e5c2
+    name: reviewing评价智能体
+    description: demo reviewing agent
+    type: agent
+    position:
+      x: 4256.686015680818
+      y: 2403.586106060242
+    data:
+      inputs:
+        agent_param:
+        - name: prompt
+          type: string
+          value:
+            type: value
+            content: "需要回答的问题是: {{input}}\n"
+        - name: id
+          type: string
+          value:
+            type: value
+            content: demo_reviewing_agent
+        input_param:
+        - type: string
+          name: input
+          value:
+            type: reference
+            content:
+            - start-ddc389cc-607d-49db-994a-49e819db426d
+            - user_input
+        - type: dict
+          name: expressing_result
+          value:
+            type: reference
+            content:
+            - tool-7495f6a3-d597-4007-bccc-992a9f255d20
+            - expressing_result
+      outputs:
+      - name: output
+        type: string
+  - id: end-60180b26-3d40-4088-a464-0504347ec79b
+    position:
+      x: 4971.352631631295
+      y: 2412.728343713197
+    name: 结束节点
+    description: 工作流的最终节点，用于返回工作流运行后的结果信息
+    type: end
+    data:
+      inputs:
+        input_param:
+        - name: response
+          type: string
+          value:
+            type: reference
+            content:
+            - agent-16489913-9519-45ea-a0c2-c31cdfef6b0f
+            - output
+        prompt:
+          type: string
+          description: 输出内容
+          value:
+            type: reference
+            content: '{{response}}'
+      outputs:
+      - name: output
+        type: string
+  edges:
+  - id: 
+      xy-edge__start-ddc389cc-607d-49db-994a-49e819db426d-agent-2ac89663-02a5-4d12-b09b-42c3ba98d144
+    source_node_id: start-ddc389cc-607d-49db-994a-49e819db426d
+    target_node_id: agent-2ac89663-02a5-4d12-b09b-42c3ba98d144
+  - id: 
+      xy-edge__agent-63ad55c5-adb0-4b12-9aa3-ead18be0e5c2-end-60180b26-3d40-4088-a464-0504347ec79b
+    source_node_id: agent-63ad55c5-adb0-4b12-9aa3-ead18be0e5c2
+    target_node_id: end-60180b26-3d40-4088-a464-0504347ec79b
+  - id: 
+      xy-edge__agent-2ac89663-02a5-4d12-b09b-42c3ba98d144-tool-196165e8-4591-4974-8940-e2489c963825
+    source_node_id: agent-2ac89663-02a5-4d12-b09b-42c3ba98d144
+    target_node_id: tool-196165e8-4591-4974-8940-e2489c963825
+  - id: 
+      xy-edge__tool-196165e8-4591-4974-8940-e2489c963825-agent-39a971c7-a8a4-47c4-9d14-17fe6d076628
+    source_node_id: tool-196165e8-4591-4974-8940-e2489c963825
+    target_node_id: agent-39a971c7-a8a4-47c4-9d14-17fe6d076628
+  - id: 
+      xy-edge__agent-39a971c7-a8a4-47c4-9d14-17fe6d076628-tool-ccce36d2-c723-4904-8c39-4ae2544239bf
+    source_node_id: agent-39a971c7-a8a4-47c4-9d14-17fe6d076628
+    target_node_id: tool-ccce36d2-c723-4904-8c39-4ae2544239bf
+  - id: 
+      xy-edge__tool-ccce36d2-c723-4904-8c39-4ae2544239bf-agent-16489913-9519-45ea-a0c2-c31cdfef6b0f
+    source_node_id: tool-ccce36d2-c723-4904-8c39-4ae2544239bf
+    target_node_id: agent-16489913-9519-45ea-a0c2-c31cdfef6b0f
+  - id: 
+      xy-edge__agent-16489913-9519-45ea-a0c2-c31cdfef6b0f-tool-7495f6a3-d597-4007-bccc-992a9f255d20
+    source_node_id: agent-16489913-9519-45ea-a0c2-c31cdfef6b0f
+    target_node_id: tool-7495f6a3-d597-4007-bccc-992a9f255d20
+  - id: 
+      xy-edge__tool-7495f6a3-d597-4007-bccc-992a9f255d20-agent-63ad55c5-adb0-4b12-9aa3-ead18be0e5c2
+    source_node_id: tool-7495f6a3-d597-4007-bccc-992a9f255d20
+    target_node_id: agent-63ad55c5-adb0-4b12-9aa3-ead18be0e5c2
+metadata:
+  class: Workflow
+  module: agentuniverse.workflow.workflow
+  type: WORKFLOW

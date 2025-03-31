@@ -1,0 +1,11 @@
+id: common_plugin
+nickname: 通用插件
+avatar:
+description: 通用插件
+type: PLUGIN
+toolset:
+- param_converter
+metadata:
+  class: PluginProduct
+  module: agentuniverse_product.base.plugin_product
+  type: PRODUCT

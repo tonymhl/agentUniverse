@@ -6,7 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: chat_prompt.py
 import base64
-from typing import List
+from typing import List, Optional
 import re
 from urllib.parse import urlparse
 
@@ -68,6 +68,10 @@ class ChatPrompt(Prompt):
         """
         if image_urls:
             for image_url in image_urls:
+                if isinstance(image_url, dict) and "url" in image_url:
+                    content = [{"type": "image_url", "image_url": image_url}]
+                    self.messages.append(Message(type=ChatMessageEnum.HUMAN.value, content=content))
+                    continue
                 parsed_url = urlparse(image_url)
                 # Check if the URL is a valid HTTP or HTTPS URL.
                 if parsed_url.scheme in ["http", "https"]:

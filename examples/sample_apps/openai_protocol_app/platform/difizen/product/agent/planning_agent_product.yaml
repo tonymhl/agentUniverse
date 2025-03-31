@@ -1,0 +1,9 @@
+id: demo_planning_agent
+nickname: planning策划智能体（当前只支持应用到peer中，不支持单独使用）
+opening_speech:
+type: AGENT
+avatar: ../../../resources/agent_logo.png
+metadata:
+  class: AgentProduct
+  module: agentuniverse_product.base.agent_product
+  type: PRODUCT

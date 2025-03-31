@@ -12,7 +12,8 @@ from gunicorn.app.base import BaseApplication
 from .flask_server import app
 from .post_fork_queue import POST_FORK_QUEUE
 from ...base.annotation.singleton import singleton
-
+from ...base.context.framework_context_manager import FrameworkContextManager
+from ...base.util.tracing.au_trace_manager import AuTraceManager
 
 DEFAULT_GUNICORN_CONFIG = {
     'bind': '127.0.0.1:8888',
@@ -31,6 +32,16 @@ def post_fork(server, worker):
         _func(*args, **kwargs)
 
 
+class ContextVarResetMiddleware:
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        try:
+            return self.app(environ, start_response)
+        finally:
+            FrameworkContextManager().clear_all_contexts()
+            AuTraceManager().reset_trace()
 @singleton
 class GunicornApplication(BaseApplication):
     """Use gunicorn to wrap the flask web server."""
@@ -41,6 +52,8 @@ class GunicornApplication(BaseApplication):
         else:
             self.default_config = None
         self.application = app
+        self.application.wsgi_app = ContextVarResetMiddleware(self.application.wsgi_app)
+
         super().__init__()
 
     def load_config(self):

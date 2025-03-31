@@ -1,0 +1,16 @@
+info:
+  name: 'openai_protocol_expressing_agent'
+  description: 'demo openai protocol expressing agent'
+profile:
+  prompt_version: demo_expressing_agent.cn
+  llm_model:
+    name: qwen_llm
+    temperature: 0.2
+    prompt_processor:
+      type: stuff
+memory:
+  name: 'demo_memory'
+metadata:
+  type: 'AGENT'
+  module: 'openai_protocol_app.intelligence.agentic.agent.agent_template.openai_protocol_expressing_agent'
+  class: 'OpenAIProtocolExpressingAgentTemplate'

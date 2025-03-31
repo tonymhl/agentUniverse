@@ -68,12 +68,23 @@ class RequestTask:
         self.state = TaskStateEnum.INIT.value
         # Whether save to Database.
         self.saved = saved
+        self.last_update_time = time.time()
         self.__request_do__ = self.add_request_do()
         self.async_queue = asyncio.Queue(maxsize=2000)
         self.async_task = None
 
+    def update_request_do(self, force: bool = False):
+        current_time = time.time()
+        if_update = current_time - self.last_update_time >= RequestLibrary().update_interval
+
+        if if_update or force:
+            self.last_update_time = current_time
+            RequestLibrary().update_request(self.__request_do__)
+
+
     def receive_steps(self):
         """Yield the stream data by getting data from the queue."""
+        self.next_state(TaskStateEnum.RUNNING)
         first_chunk = True
         start_time = time.time()
         while True:
@@ -84,7 +95,7 @@ class RequestTask:
                 break
             if first_chunk:
                 first_chunk = False
-                cost_time = time.time()-start_time
+                cost_time = time.time() - start_time
                 logger.bind(
                     log_type=LogTypeEnum.agent_first_token,
                     cost_time=cost_time,
@@ -92,19 +103,72 @@ class RequestTask:
                 ).info("Agent first token generated.")
             yield "data:" + json.dumps({"process": output},
                                        ensure_ascii=False) + "\n\n"
-        if self.canceled():
-            return
         try:
-            result = self.thread.result()
-            if isinstance(result, OutputObject):
-                result = result.to_dict()
-            yield "data:" + json.dumps({"result": result},
-                                       ensure_ascii=False) + "\n\n "
+            if self.canceled():
+                self.__request_do__.result['result'] = {
+                    "result": "The task's tracking status has been canceled."}
+            else:
+                result = self.thread.result()
+                if isinstance(result, OutputObject):
+                    result = result.to_dict()
+
+                yield "data:" + json.dumps({"result": result},
+                                           ensure_ascii=False) + "\n\n "
+                self.__request_do__.result['result'] = result
+                self.next_state(TaskStateEnum.FINISHED)
+            if self.saved:
+                self.update_request_do(force=True)
         except Exception as e:
-            LOGGER.error("request task execute Fail: " + str(e)+traceback.format_exc())
+            LOGGER.error("request task execute Fail: " + str(e) + traceback.format_exc())
+            if self.saved:
+                self.__request_do__.result['result'] = {"error_msg": str(e)}
+                self.next_state(TaskStateEnum.FAIL)
+                self.update_request_do(force=True)
+            yield "data:" + json.dumps({"error": {"error_msg": str(e)}}) + "\n\n "
+
+    def user_receive_steps(self):
+        """Yield the stream data by getting data from the queue."""
+        self.next_state(TaskStateEnum.RUNNING)
+        first_chunk = True
+        start_time = time.time()
+        while True:
+            output: str = self.queue.get()
+            if output is None:
+                break
+            if output == EOF_SIGNAL:
+                break
+            if first_chunk:
+                first_chunk = False
+                cost_time = time.time() - start_time
+                logger.bind(
+                    log_type=LogTypeEnum.agent_first_token,
+                    cost_time=cost_time,
+                    context_prefix=get_context_prefix()
+                ).info("Agent first token generated.")
+            if isinstance(output, str):
+                yield "data:" + output + "\n\n"
+        try:
+            if self.canceled():
+                self.__request_do__.result['result'] = {
+                    "result": "The task's tracking status has been canceled."}
+            else:
+                result = self.thread.result()
+                if isinstance(result, OutputObject):
+                    result = result.to_dict()
+                self.__request_do__.result['result'] = result
+                self.next_state(TaskStateEnum.FINISHED)
+            if self.saved:
+                self.update_request_do(force=True)
+        except Exception as e:
+            LOGGER.error("request task execute Fail: " + str(e) + traceback.format_exc())
+            if self.saved:
+                self.__request_do__.result['result'] = {"error_msg": str(e)}
+                self.next_state(TaskStateEnum.FAIL)
+                self.update_request_do(force=True)
             yield "data:" + json.dumps({"error": {"error_msg": str(e)}}) + "\n\n "
 
     async def async_receive_steps(self) -> AsyncIterator[str]:
+        self.next_state(TaskStateEnum.RUNNING)
         first_chunk = True
         start_time = time.time()
         while True:
@@ -128,16 +192,25 @@ class RequestTask:
                 ).info("LLM first token generated.")
             yield "data:" + json.dumps({"process": output},
                                        ensure_ascii=False) + "\n\n"
-        if self.canceled():
-            return
         try:
-            result = await self.async_task
-            if isinstance(result, OutputObject):
-                result = result.to_dict()
-            yield "data:" + json.dumps({"result": result},
-                                       ensure_ascii=False) + "\n\n"
+            if self.canceled():
+                self.__request_do__.result['result'] = {
+                    "result": "The task's tracking status has been canceled."}
+            else:
+                result = await self.async_task
+                if isinstance(result, OutputObject):
+                    result = result.to_dict()
+                yield "data:" + json.dumps({"result": result},
+                                           ensure_ascii=False) + "\n\n"
+                self.__request_do__.result["result"] = result
+            if self.saved:
+                self.update_request_do(force=True)
         except Exception as e:
-            LOGGER.error("request task execute Fail: " + str(e))
+            LOGGER.error("request task update request state Fail: " + str(e))
+            if self.saved:
+                self.__request_do__.result['result'] = {"error_msg": str(e)}
+                self.next_state(TaskStateEnum.FAIL)
+                self.update_request_do(force=True)
             yield "data:" + json.dumps({"error": {"error_msg": str(e)}}) + "\n\n"
 
     def append_steps(self):
@@ -153,7 +226,7 @@ class RequestTask:
                 if output != "" and output != " ":
                     self.__request_do__.steps.append(output)
                 if self.saved:
-                    RequestLibrary().update_request(self.__request_do__)
+                    self.update_request_do()
             if self.canceled():
                 self.__request_do__.result['result'] = {
                     "result": "The task's tracking status has been canceled."}
@@ -161,13 +234,13 @@ class RequestTask:
                 self.__request_do__.result['result'] = self.thread.result()
                 self.next_state(TaskStateEnum.FINISHED)
             if self.saved:
-                RequestLibrary().update_request(self.__request_do__)
+                self.update_request_do(force=True)
         except Exception as e:
             LOGGER.error("request task update request state Fail: " + str(e))
             self.__request_do__.result['result'] = {"error_msg": str(e)}
             self.next_state(TaskStateEnum.FAIL)
             if self.saved:
-                RequestLibrary().update_request(self.__request_do__)
+                self.update_request_do(force=True)
 
     def async_run(self):
         """Run the service in async mode."""
@@ -186,6 +259,13 @@ class RequestTask:
                                             kwargs=self.kwargs)
         self.thread.start()
         return self.receive_steps()
+
+    def user_stream_run(self):
+        self.kwargs['output_stream'] = self.queue
+        self.thread = ThreadWithReturnValue(target=self.func,
+                                            kwargs=self.kwargs)
+        self.thread.start()
+        return self.user_receive_steps()
 
     async def async_stream_run(self) -> AsyncIterator[str]:
         self.kwargs['output_stream'] = self.async_queue
@@ -237,8 +317,7 @@ class RequestTask:
                                  " task thread stop but state not end")
                     self.__request_do__.state = TaskStateEnum.FAIL.value
                     if self.saved:
-                        RequestLibrary().update_request(
-                            self.__request_do__)
+                        self.update_request_do(force=True)
             break
 
     def add_request_do(self):

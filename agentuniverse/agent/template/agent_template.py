@@ -1,6 +1,7 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
-
+import datetime
+import json
 # @Time    : 2024/9/29 15:51
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
@@ -16,6 +17,7 @@ from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.memory import Memory
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
 from agentuniverse.base.util.agent_util import assemble_memory_input, assemble_memory_output
+from agentuniverse.base.util.memory_util import get_memory_string
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
 from agentuniverse.prompt.chat_prompt import ChatPrompt
@@ -86,6 +88,13 @@ class AgentTemplate(Agent, ABC):
         return super().process_llm(llm_name=self.llm_name)
 
     def process_memory(self, agent_input: dict, **kwargs) -> Memory | None:
+        if 'chat_history' in agent_input and agent_input.get('chat_history'):
+            if isinstance(agent_input.get('chat_history'), list):
+                agent_input['chat_history'] = get_memory_string(agent_input.get('chat_history'),
+                                                                agent_input.get('agent_id'))
+                return None
+            else:
+                return None
         return super().process_memory(agent_input=agent_input, memory_name=self.memory_name, llm_name=self.llm_name)
 
     def invoke_tools(self, input_object: InputObject, **kwargs) -> str:

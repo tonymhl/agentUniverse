@@ -258,50 +258,111 @@ def trace_agent(func):
 def trace_tool(func):
     """Annotation: @trace_tool
 
-    Decorator to trace the tool invocation.
+    A decorator to trace tool invocations, supporting both synchronous and asynchronous functions.
+    It monitors tool execution, tracks timing, and maintains an invocation chain.
     """
 
-    @functools.wraps(func)
-    def wrapper_sync(*args, **kwargs):
-        # get tool input from arguments
-        tool_input = _get_input(func, *args, **kwargs)
-        start_time = time.time()
+    def process_tool(source, tool_input, start_info, pair_id):
+        """Process common tool logic
 
-        source = func.__qualname__
-        start_info = get_caller_info()
-        pair_id = f"tool_{uuid.uuid4().hex}"
-        ConversationMemoryModule().add_tool_input_info(start_info, source, tool_input, pair_id)
+        Args:
+            source: The source/name of the tool
+            tool_input: Input parameters for the tool
+            start_info: Information about where the tool was called from
+            pair_id: The ID for this tool invocation
+
+        Returns:
+            tuple: (self tool instance, updated source name)
+        """
         self = tool_input.pop('self', None)
-
-        if self and hasattr(self, 'tracing'):
-            if self.tracing is False:
-                result = func(*args, **kwargs)
-                ConversationMemoryModule().add_tool_output_info(start_info, source, params=result, pair_id=pair_id)
-                return result
-
         if isinstance(self, object):
             name = getattr(self, 'name', None)
             if name is not None:
                 source = name
+        ConversationMemoryModule().add_tool_input_info(start_info, source, tool_input, pair_id)
+        return self, source
 
-        Monitor().trace_tool_input(source, tool_input)
+    def handle_tool_result(start_info, source, result, pair_id):
+        """Handle the tool execution result
 
-        # add invocation chain to the monitor module.
-        Monitor.add_invocation_chain({'source': source, 'type': 'tool'})
+        Args:
+            start_info: Information about where the tool was called from
+            source: The source/name of the tool
+            result: The execution result
+            pair_id: The ID for this tool invocation
 
-        # invoke function
-        result = func(*args, **kwargs)
-
-        # add tool invocation info to monitor
-        Monitor().trace_tool_invocation(source=source, tool_input=tool_input, tool_output=result,
-                                        cost_time=time.time() - start_time)
+        Returns:
+            The execution result
+        """
         ConversationMemoryModule().add_tool_output_info(start_info, source, params=result, pair_id=pair_id)
-        Monitor.pop_invocation_chain()
-
         return result
 
-    # sync function
-    return wrapper_sync
+    def trace_tool_execution(source, tool_input, result, start_time):
+        """Trace the tool execution process
+
+         Args:
+             source: The source/name of the tool
+             tool_input: Input parameters for the tool
+             result: The execution result
+             start_time: Timestamp when the tool execution started
+         """
+        # add invocation chain to the monitor module.
+        Monitor.add_invocation_chain({'source': source, 'type': 'tool'})
+        Monitor().trace_tool_invocation(
+            source=source,
+            tool_input=tool_input,
+            tool_output=result,
+            cost_time=time.time() - start_time
+        )
+        Monitor.pop_invocation_chain()
+
+    @functools.wraps(func)
+    async def wrapper_async(*args, **kwargs):
+        # Extract tool input from arguments
+        tool_input = _get_input(func, *args, **kwargs)
+        start_time = time.time()
+        source = func.__qualname__
+        start_info = get_caller_info()
+        pair_id = f"tool_{uuid.uuid4().hex}"
+
+        self, source = process_tool(source, tool_input, start_info, pair_id)
+
+        # Handle case when tracing is disabled
+        if self and hasattr(self, 'tracing') and self.tracing is False:
+            result = await func(*args, **kwargs)
+            return handle_tool_result(start_info, source, result, pair_id)
+
+        # Initialize and execute with full tracing
+        Monitor.init_invocation_chain()
+        Monitor().trace_tool_input(source, tool_input)
+        result = await func(*args, **kwargs)
+        trace_tool_execution(source, tool_input, result, start_time)
+        return handle_tool_result(start_info, source, result, pair_id)
+
+    @functools.wraps(func)
+    def wrapper_sync(*args, **kwargs):
+        # Extract tool input from arguments
+        tool_input = _get_input(func, *args, **kwargs)
+        start_time = time.time()
+        source = func.__qualname__
+        start_info = get_caller_info()
+        pair_id = f"tool_{uuid.uuid4().hex}"
+
+        self, source = process_tool(source, tool_input, start_info, pair_id)
+
+        # Handle case when tracing is disabled
+        if self and hasattr(self, 'tracing') and self.tracing is False:
+            result = func(*args, **kwargs)
+            return handle_tool_result(start_info, source, result, pair_id)
+
+        # Initialize and execute with full tracing
+        Monitor.init_invocation_chain()
+        Monitor().trace_tool_input(source, tool_input)
+        result = func(*args, **kwargs)
+        trace_tool_execution(source, tool_input, result, start_time)
+        return handle_tool_result(start_info, source, result, pair_id)
+
+    return wrapper_async if asyncio.iscoroutinefunction(func) else wrapper_sync
 
 
 def trace_knowledge(func):
@@ -310,41 +371,93 @@ def trace_knowledge(func):
     Decorator to trace the knowledge invocation.
     """
 
-    @functools.wraps(func)
-    def wrapper_sync(*args, **kwargs):
-        # get knowledge input from arguments
-        knowledge_input = _get_input(func, *args, **kwargs)
+    def process_knowledge(source, knowledge_input, start_info, pair_id):
+        """Process common knowledge logic
 
-        source = func.__qualname__
+        Args:
+            source: The source/name of the knowledge
+            knowledge_input: Input parameters for the knowledge
+            start_info: Information about where the knowledge was called from
+            pair_id: The ID for this knowledge invocation
+
+        Returns:
+            tuple: (self knowledge instance, updated source name)
+        """
         self = knowledge_input.pop('self', None)
-        start = get_caller_info()
-        pair_id = f"knowledge_{uuid.uuid4().hex}"
-        ConversationMemoryModule().add_knowledge_input_info(start, source, knowledge_input, pair_id)
-
-        if self and hasattr(self, 'tracing'):
-            if self.tracing is False:
-                result = func(*args, **kwargs)
-                ConversationMemoryModule().add_knowledge_output_info(start, source, params=result, pair_id=pair_id)
-                return result
-
         if isinstance(self, object):
             name = getattr(self, 'name', None)
             if name is not None:
                 source = name
+        ConversationMemoryModule().add_knowledge_input_info(start_info, source, knowledge_input, pair_id)
+        return self, source
 
-        # add invocation chain to the monitor module.
-        Monitor.add_invocation_chain({'source': source, 'type': 'knowledge'})
+    def handle_knowledge_result(start_info, source, result, pair_id):
+        """Handle the knowledge execution result
 
-        # invoke function
-        result = func(*args, **kwargs)
-        ConversationMemoryModule().add_knowledge_output_info(start, source, params=result, pair_id=pair_id)
+        Args:
+            start_info: Information about where the knowledge was called from
+            source: The source/name of the knowledge
+            result: The execution result
+            pair_id: The ID for this knowledge invocation
 
-        Monitor.pop_invocation_chain()
-
+        Returns:
+            The execution result
+        """
+        ConversationMemoryModule().add_knowledge_output_info(start_info, source, params=result, pair_id=pair_id)
         return result
 
-    # sync function
-    return wrapper_sync
+    def trace_knowledge_execution(source):
+        """Trace the knowledge execution process
+
+        Args:
+            source: The source/name of the knowledge
+        """
+        Monitor.init_invocation_chain()
+        Monitor.add_invocation_chain({'source': source, 'type': 'knowledge'})
+
+    @functools.wraps(func)
+    async def wrapper_async(*args, **kwargs):
+        # Get knowledge input from arguments
+        knowledge_input = _get_input(func, *args, **kwargs)
+        source = func.__qualname__
+        start_info = get_caller_info()
+        pair_id = f"knowledge_{uuid.uuid4().hex}"
+
+        self, source = process_knowledge(source, knowledge_input, start_info, pair_id)
+
+        # Handle case when tracing is disabled
+        if self and hasattr(self, 'tracing') and self.tracing is False:
+            result = await func(*args, **kwargs)
+            return handle_knowledge_result(start_info, source, result, pair_id)
+
+        # Initialize and execute with full tracing
+        trace_knowledge_execution(source)
+        result = await func(*args, **kwargs)
+        Monitor.pop_invocation_chain()
+        return handle_knowledge_result(start_info, source, result, pair_id)
+
+    @functools.wraps(func)
+    def wrapper_sync(*args, **kwargs):
+        # Get knowledge input from arguments
+        knowledge_input = _get_input(func, *args, **kwargs)
+        source = func.__qualname__
+        start_info = get_caller_info()
+        pair_id = f"knowledge_{uuid.uuid4().hex}"
+
+        self, source = process_knowledge(source, knowledge_input, start_info, pair_id)
+
+        # Handle case when tracing is disabled
+        if self and hasattr(self, 'tracing') and self.tracing is False:
+            result = func(*args, **kwargs)
+            return handle_knowledge_result(start_info, source, result, pair_id)
+
+        # Initialize and execute with full tracing
+        trace_knowledge_execution(source)
+        result = func(*args, **kwargs)
+        Monitor.pop_invocation_chain()
+        return handle_knowledge_result(start_info, source, result, pair_id)
+
+    return wrapper_async if asyncio.iscoroutinefunction(func) else wrapper_sync
 
 
 def _get_input(func, *args, **kwargs) -> dict:

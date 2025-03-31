@@ -44,31 +44,18 @@ class AuTraceContext:
 
     def set_session_id(self, session_id: str):
         self._session_id = session_id
-        FrameworkContextManager().set_log_context("session_id",
-                                                  self.session_id)
 
     def set_trace_id(self, trace_id: str):
         self._trace_id = trace_id
-        FrameworkContextManager().set_log_context("trace_id", self.trace_id)
 
     def set_span_id(self, span_id: str):
         self._span_id = span_id
-        FrameworkContextManager().set_log_context("span_id", self.span_id)
 
     def gen_child_span_id(self) -> str:
         with self._lock:
             child_span_id = self.span_id + '.' + str(self._span_id_counter)
             self._span_id_counter += 1
             return child_span_id
-
-
-    def set_log_context(self):
-        if self.session_id:
-            FrameworkContextManager().set_log_context("session_id", self.session_id)
-        if self.trace_id:
-            FrameworkContextManager().set_log_context("trace_id", self.trace_id)
-        if self.span_id:
-            FrameworkContextManager().set_log_context("span_id", self.span_id)
 
 
     def to_dict(self) -> dict:

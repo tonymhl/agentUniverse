@@ -1,10 +1,10 @@
 import traceback
 import time
-from flask import Flask, Response, g, request
+from flask import Flask, Response, g, request, make_response, jsonify
 from werkzeug.exceptions import HTTPException
 from loguru import logger
 from concurrent.futures import TimeoutError
-
+import opentracing
 from ..service_instance import ServiceInstance, ServiceNotFoundError
 from .request_task import RequestTask
 from .web_util import request_param, service_run_queue, make_standard_response, FlaskServerManager
@@ -42,8 +42,11 @@ LocalProxy.__reduce_ex__ = localproxy_reduce_ex
 
 
 # log stream response
-def timed_generator(generator, start_time):
+def timed_generator(generator, start_time, span):
     try:
+        opentracing.tracer.scope_manager.activate(
+            span, finish_on_close=False
+        )
         for data in generator:
             yield data
     finally:
@@ -68,7 +71,6 @@ def before():
         flask_request=request,
         context_prefix=get_context_prefix()
     ).info("Before request.")
-    AuTraceManager().set_log_context()
     g.start_time = time.time()
 
 
@@ -143,9 +145,12 @@ def service_run_stream(service_id: str, params: dict, saved: bool = False):
     """
     params = {} if params is None else params
     params['service_id'] = service_id
+    params['streaming'] = True
     task = RequestTask(service_run_queue, saved, **params)
-    response = Response(timed_generator(task.stream_run(),g.start_time), mimetype="text/event-stream")
+    span = opentracing.tracer.active_span
+    response = Response(timed_generator(task.stream_run(), g.start_time, span), mimetype="text/event-stream")
     response.headers['X-Request-ID'] = task.request_id
+    LOGGER.info("au_test")
     return response
 
 
@@ -219,3 +224,36 @@ def handle_exception(e):
     return make_standard_response(success=False,
                                   message="Internal Server Error",
                                   status_code=500)
+
+
+@app.route("/chat/completions", methods=['POST'])
+@request_param
+def openai_protocol_chat(model: str, messages: list):
+    """
+    OpenAI chat completion API.
+    """
+    stream = request.json.get("stream", False)
+    params = {
+        "service_id": model,
+        "messages": messages,
+        "stream": stream
+    }
+    if stream:
+        task = RequestTask(service_run_queue, False, **params)
+        response = Response(timed_generator(task.user_stream_run(), g.start_time), mimetype="text/event-stream")
+        response.headers['X-Request-ID'] = task.request_id
+        return response
+    try:
+        params = {} if params is None else params
+        request_task = RequestTask(ServiceInstance(params.get('service_id')).run, False,
+                                   **params)
+        with ThreadPoolExecutorWithReturnValue() as executor:
+            future = executor.submit(request_task.run)
+            result = future.result(timeout=FlaskServerManager().sync_service_timeout)
+    except TimeoutError:
+        return make_standard_response(success=False,
+                                      message="AU sync service timeout",
+                                      status_code=504)
+    response = make_response(result, 200)
+    response.headers['X-Request-ID'] = request_task.request_id
+    return response

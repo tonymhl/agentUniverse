@@ -1,0 +1,20 @@
+info:
+  name: 'openai_protocol_react_agent'
+  description: 'react agent'
+profile:
+  prompt_version: qwen_react_agent.cn
+  llm_model:
+    name: 'qwen_llm'
+    model_name: 'qwen-max'
+    stop: 'Observation'
+    temperature: 0.1
+action:
+  tool:
+    - 'google_search_tool'
+    - 'python_runner'
+memory:
+  name: 'demo_memory'
+metadata:
+  type: 'AGENT'
+  module: 'openai_protocol_app.intelligence.agentic.agent.agent_template.react_openai_agent_template'
+  class: 'ReActOpenAIAgentTemplate'

@@ -1,0 +1,22 @@
+info:
+  name: 'openai_protocol_peer_agent'
+  description: 'demo openai protocol peer agent'
+profile:
+  planning: 'openai_protocol_planning_agent'
+  executing: 'openai_protocol_executing_agent'
+  expressing: 'openai_protocol_expressing_agent'
+  reviewing: 'openai_protocol_reviewing_agent'
+  retry_count: 2
+  expert_framework:
+    context:
+      planning:
+      executing:
+      expressing:
+      reviewing:
+    selector:
+memory:
+  name: 'demo_memory'
+metadata:
+  type: 'AGENT'
+  module: 'openai_protocol_app.intelligence.agentic.agent.agent_template.openai_protocol_peer_agent'
+  class: 'PeerAgent'

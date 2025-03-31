@@ -271,7 +271,7 @@ class Agent(ComponentBase, ABC):
 
     def invoke_chain(self, chain: RunnableSerializable[Any, str], agent_input: dict, input_object: InputObject,
                      **kwargs):
-        if not input_object.get_data('output_stream'):
+        if not self.judge_chain_stream(chain):
             res = chain.invoke(input=agent_input, config=self.get_run_config())
             return res
         result = []
@@ -288,7 +288,7 @@ class Agent(ComponentBase, ABC):
 
     async def async_invoke_chain(self, chain: RunnableSerializable[Any, str], agent_input: dict,
                                  input_object: InputObject, **kwargs):
-        if not input_object.get_data('output_stream'):
+        if not self.judge_chain_stream(chain):
             res = await chain.ainvoke(input=agent_input, config=self.get_run_config())
             return res
         result = []
@@ -303,11 +303,19 @@ class Agent(ComponentBase, ABC):
             result.append(token)
         return self.generate_result(result)
 
+    def judge_chain_stream(self,
+                           chain: RunnableSerializable[Any, str]) -> bool:
+        streaming = False
+        for _step in chain.steps:
+            if hasattr(_step, "llm"):
+                return _step.kwargs.get('streaming', _step.llm.streaming)
+        return streaming
+
     def generate_result(self, data: list[dict | str]):
         if isinstance(data[0], str):
             return "".join(data)
         text = [val.get('text') for val in data]
-        reasoning_content = [val.get('reasoning_content',"") for val in data]
+        reasoning_content = [val.get('reasoning_content', "") for val in data]
         return {
             'text': "".join(text),
             'reasoning_content': "".join(reasoning_content)
