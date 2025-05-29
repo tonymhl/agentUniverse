@@ -38,7 +38,7 @@ class RagAgentTemplate(AgentTemplate):
 
     async def customized_async_execute(self, input_object: InputObject, agent_input: dict, memory: Memory, llm: LLM,
                                        prompt: Prompt, **kwargs) -> dict:
-        tool_res: str = self.invoke_tools(input_object)
+        tool_res: str = await self.async_invoke_tools(input_object)
         knowledge_res: str = self.invoke_knowledge(agent_input.get('input'), input_object)
         agent_input['background'] = (agent_input['background']
                                      + f"tool_res: {tool_res} \n\n knowledge_res: {knowledge_res}")

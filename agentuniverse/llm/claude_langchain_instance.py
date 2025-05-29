@@ -31,10 +31,10 @@ class ClaudeLangChainInstance(ChatAnthropic):
         init_params['temperature'] = llm.temperature if llm.temperature else 0.7
         init_params['default_request_timeout'] = llm.request_timeout
         init_params['streaming'] = llm.streaming if llm.streaming else False
-        init_params['anthropic_api_key'] = llm.anthropic_api_key if llm.anthropic_api_key else 'blank'
+        init_params['anthropic_api_key'] = llm.api_key if llm.api_key else 'blank'
         init_params['max_tokens'] = llm.max_tokens
         init_params['max_retries'] = llm.max_retries if llm.max_retries else 2
-        init_params['anthropic_api_url'] = llm.anthropic_api_url
+        init_params['anthropic_api_url'] = llm.api_url
         init_params['streaming'] = llm.streaming
         init_params['llm'] = llm
         super().__init__(**init_params)

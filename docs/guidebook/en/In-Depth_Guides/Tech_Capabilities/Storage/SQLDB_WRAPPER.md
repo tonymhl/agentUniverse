@@ -11,7 +11,7 @@ agentUniverse automatically registers SQLDBWrapper configuration files by scanni
 default = ['default_scan_path']
 sqldb_wrapper = ['sqldb_wrapper_scan_path']
 ```
-By default, AgentUniverse scans all paths under either `default` or `sqldb_wrapper`sections in the configurtion, with paths under `sqldb_wrapper` having a higher priority than those under `default`.
+By default, agentUniverse scans all paths under either `default` or `sqldb_wrapper`sections in the configuration, with paths under `sqldb_wrapper` having a higher priority than those under `default`.
 
 
 ### Step Two: Configuration File
@@ -65,7 +65,7 @@ Example of returned result:
 ```
 
 ### sql_database
-If you wish to utilize some of the native features of SQLAlchemy or the SQLDatabase, you can access the corresponding objects through the `sql_database` property of the SQLDBWrapper class in the AgentUniverse framework.
+If you wish to utilize some of the native features of SQLAlchemy or the SQLDatabase, you can access the corresponding objects through the `sql_database` property of the SQLDBWrapper class in the agentUniverse framework.
 ```python
 from agentuniverse.database.sqldb_wrapper import SQLDBWrapper
 from agentuniverse.database.sqldb_wrapper_manager import SQLDBWrapperManager

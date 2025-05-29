@@ -31,7 +31,7 @@ sls_log_send_interval = 3.0
 - **`sls_log_store`**:阿里云sls的log_store
 - **`access_key_id`**:阿里云sls的ak
 - **`access_key_secret`**:阿里云sls的sk
-- **`sls_log_queue_max_size`**:AgentUniverse采用定时批量上送日志的形式，这个参数表示每次上送间隔中能缓存的最大日志条数。
+- **`sls_log_queue_max_size`**:agentUniverse采用定时批量上送日志的形式，这个参数表示每次上送间隔中能缓存的最大日志条数。
 - **`sls_log_send_interval`**:上送日志到sls的间隔，单位为秒
 
-在配置完成后，您可以直接使用全局日志组件或是定制日志组件记录日志，AgentUniverse会自动将记录的内容上送至您的sls。
+在配置完成后，您可以直接使用全局日志组件或是定制日志组件记录日志，agentUniverse会自动将记录的内容上送至您的sls。

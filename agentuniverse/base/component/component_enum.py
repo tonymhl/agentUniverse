@@ -15,6 +15,7 @@ class ComponentEnum(Enum):
     LLM = "LLM"
     PLANNER = "PLANNER"
     TOOL = "TOOL"
+    TOOLKIT = "TOOLKIT"
     DEFAULT = "DEFAULT"
     SERVICE = "SERVICE"
     MEMORY = "MEMORY"
@@ -32,6 +33,7 @@ class ComponentEnum(Enum):
     MEMORY_COMPRESSOR = "MEMORY_COMPRESSOR"
     MEMORY_STORAGE = "MEMORY_STORAGE"
     LOG_SINK = "LOG_SINK"
+    LLM_CHANNEL = "LLM_CHANNEL"
 
     @staticmethod
     def to_value_list():

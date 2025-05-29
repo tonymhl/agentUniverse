@@ -11,7 +11,7 @@ agentUniverse automatically registers service configuration files by scanning co
 default = ['default_scan_path']
 service = ['service_scan_path']
 ```
-By default, AgentUniverse scans all paths under both default and service directories, with the path configuration under service having higher priority than that under default.
+By default, agentUniverse scans all paths under both default and service directories, with the path configuration under service having higher priority than that under default.
 
 ### Step2: Configuration File
 ```yaml

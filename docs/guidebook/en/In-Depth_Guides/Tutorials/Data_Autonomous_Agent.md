@@ -31,7 +31,7 @@ To illustrate, consider establishing a queryset that contains 3 items. Each item
 ```
 
 ### Step2 Configure DataAgent
-CWhen configuring the DataAgent within the AgentUniverse framework, the configuration file, in addition to the basic agent settings, primarily includes two crucial items:  `dataset_builder` , which corresponds to the name of the agent responsible for generating the evaluation dataset, and `dataset_evaluator`, which corresponds to the name of the agent tasked with dataset evaluation and annotation.
+CWhen configuring the DataAgent within the agentUniverse framework, the configuration file, in addition to the basic agent settings, primarily includes two crucial items:  `dataset_builder` , which corresponds to the name of the agent responsible for generating the evaluation dataset, and `dataset_evaluator`, which corresponds to the name of the agent tasked with dataset evaluation and annotation.
 ```yaml
 info:
   name: 'data_agent'
@@ -69,7 +69,7 @@ metadata:
 [dataset_build_agent sample python file](../../../../../examples/sample_apps/data_agent_app/intelligence/agentic/agent/agent_instance/data_agent_case/dataset_build_agent.py)
 
 ### Step4 Configure the agent for dataset evaluation and annotation
-Utilize the **dataset_eval_agent** configured in the `dataset_evaluator`step of step 2 within the AgentUniverse framework. Below is the configuration file for the dataset_eval_agent. In addition to the basic agent configuration, the configuration file primarily contains two key items:
+Utilize the **dataset_eval_agent** configured in the `dataset_evaluator`step of step 2 within the agentUniverse framework. Below is the configuration file for the dataset_eval_agent. In addition to the basic agent configuration, the configuration file primarily contains two key items:
 1. `llm_model` , which configures the agent's model.
 2. `max_eval_lines` , which specifies the maximum number of evaluation data lines (for instance, setting it to 10 means that only the first 10 rows of data will be evaluated, to avoid a full-scale evaluation and the consumption of a large number of tokens).
 ```yaml

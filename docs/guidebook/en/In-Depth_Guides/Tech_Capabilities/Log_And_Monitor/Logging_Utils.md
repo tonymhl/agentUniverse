@@ -1,11 +1,11 @@
 # Logging Utils
 
-The log component of agentUniverse is implemented based on loguru, offering a well-packaged global log component and customizable log components. This tutorial will first introduce the usage of the log configuration file within agentUniverse, then sequentially explain the utilization of the global log component and customizable log components, and finally describe how to intergrate with external log service components.
+The log component of agentUniverse is implemented based on loguru, offering a well-packaged global log component and customizable log components. This tutorial will first introduce the usage of the log configuration file within agentUniverse, then sequentially explain the utilization of the global log component and customizable log components, and finally describe how to integrate with external log service components.
     
 ## Log Configuration
 
 ### Configuration File Path
-The configuration path of the log file is specified in the main configuration of AgentUniverse, config.toml.
+The configuration path of the log file is specified in the main configuration of agentUniverse, config.toml.
 ```toml
 [SUB_CONFIG_PATH]
 # Log config file path, an absolute path or a relative path based on the dir where the current config file is located.

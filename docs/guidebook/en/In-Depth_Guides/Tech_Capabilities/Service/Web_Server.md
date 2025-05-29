@@ -3,7 +3,7 @@
 agentUniverse provides a web server based on Flask, allowing users to invoke the developed agent services through the predefined APIs on the server.
 
 ## Web Server Launch
-You need to start the web server after launching the AgentUniverse application. 
+You need to start the web server after launching the agentUniverse application. 
 Here is an example demonstrating how to launch it:
 ```python
 from agentuniverse.agent_serve.web.web_booster import start_web_server
@@ -30,9 +30,9 @@ You can set Gunicorn as your HTTP server by configuring it in the configuration 
 activate = 'true'
 ```
 
-The configuration of the Gunicorn server comprises four levels of priority, in ascending order: the native default configuration of Gunicorn, the default configuration provided by AgentUniverse, settings specified in the configuration file, and startup configuration. For information on Gunicorn's native default configuration, please refer to the official documentation for the relevant version of Gunicorn.
+The configuration of the Gunicorn server comprises four levels of priority, in ascending order: the native default configuration of Gunicorn, the default configuration provided by agentUniverse, settings specified in the configuration file, and startup configuration. For information on Gunicorn's native default configuration, please refer to the official documentation for the relevant version of Gunicorn.
 
-### AgentUniverse Default Configuration
+### agentUniverse Default Configuration
 ```python
 DEFAULT_GUNICORN_CONFIG = {
     'bind': '127.0.0.1:8888',
@@ -47,7 +47,7 @@ DEFAULT_GUNICORN_CONFIG = {
 agentUniverse has pre-configured certain parameters based on the framework's operational characteristics. These parameters can be modified either through the configuration file provided below or by specifying parameters when launching the web server.
 
 ### Configuration File Path
-The configuration path for the web server is designated in AgentUniverse's main configuration file,  `config.toml`.
+The configuration path for the web server is designated in agentUniverse's main configuration file,  `config.toml`.
 ```toml
 [GUNICORN]
 # Gunicorn config file path, an absolute path or a relative path based on the dir where the current config file is located.

@@ -35,12 +35,26 @@ class ToolManager(ComponentManagerBase):
         if instance_obj is None:
             # Retrieve the tool configuration map
             tool_configer_map: dict[str, ToolConfiger] = ApplicationConfigManager().app_configer.tool_configer_map
-            if tool_configer_map and component_instance_name in tool_configer_map.keys():
+            toolkit_configer_map = ApplicationConfigManager().app_configer.toolkit_configer_map
+            if toolkit_configer_map and '@' in component_instance_name:
+                toolkit_name, tool_name = component_instance_name.split('@')
+                from agentuniverse.agent.action.toolkit.toolkit_manager import \
+                    ToolkitManager
+                ToolkitManager().get_instance_obj(toolkit_name)
+                instance_obj = self._instance_obj_map.get(instance_code)
+
+            if not instance_obj and tool_configer_map and component_instance_name in tool_configer_map.keys():
                 tool_configer = tool_configer_map.get(component_instance_name)
                 if tool_configer:
                     # Dynamically import the module and retrieve the class specified in the configuration
-                    module = importlib.import_module(tool_configer.metadata_module)
-                    component_clz = getattr(module, tool_configer.metadata_class)
+                    if tool_configer.meta_class:
+                        metadata_module = '.'.join(tool_configer.meta_class.split('.')[:-1])
+                        metadata_class = tool_configer.meta_class.split('.')[-1]
+                        module = importlib.import_module(metadata_module)
+                        component_clz = getattr(module, metadata_class)
+                    else:
+                        module = importlib.import_module(tool_configer.metadata_module)
+                        component_clz = getattr(module, tool_configer.metadata_class)
                     # Initialize the tool instance using the configuration
                     instance_obj: Tool = component_clz().initialize_by_component_configer(tool_configer)
                     if instance_obj:

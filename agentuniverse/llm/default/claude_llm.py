@@ -5,8 +5,6 @@
 # @Author  : weizjajj 
 # @Email   : weizhongjie.wzj@antgroup.com
 # @FileName: claude_llm.py
-
-import asyncio
 from typing import Optional, Any, Union, Iterator, AsyncIterator
 
 import anthropic
@@ -14,7 +12,6 @@ import httpx
 from langchain_core.language_models import BaseLanguageModel
 from pydantic import Field
 
-from agentuniverse.base.annotation.trace import trace_llm
 from agentuniverse.base.config.component_configer.configers.llm_configer import LLMConfiger
 from agentuniverse.base.util.env_util import get_from_env
 from agentuniverse.base.util.system_util import process_yaml_func
@@ -133,6 +130,9 @@ class ClaudeLLM(LLM):
         """
         Convert this instance into a LangChain compatible object
         """
+        self.init_channel()
+        if self._channel_instance:
+            return self._channel_instance.as_langchain()
         return ClaudeLangChainInstance(self)
 
     def get_num_tokens(self, text: str) -> int:

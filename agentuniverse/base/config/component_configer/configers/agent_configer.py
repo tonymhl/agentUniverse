@@ -66,7 +66,7 @@ class AgentConfiger(ComponentConfiger):
 
         try:
             configer_value: dict = configer.value
-            if self.metadata_module is None:
+            if self.metadata_module is None and self.meta_class is None:
                 self.metadata_module = get_module_path(configer.path, get_project_root_path().name)
             self.__info = configer_value.get('info') or self.__info
             self.__profile = configer_value.get('profile') or self.__profile

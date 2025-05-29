@@ -69,8 +69,13 @@ class Message(BaseModel):
             Message: The agentUniverse(aU) message class.
         """
         message = Message()
-        attributes = ['id', 'content', 'type', 'source', 'metadata']
+        if not message_dict:
+            return message
+        attributes = ['id', 'content', 'type', 'source', 'metadata', 'role']
         for attr in attributes:
             if attr in message_dict:
-                setattr(message, attr, message_dict[attr])
+                if attr == 'role':
+                    setattr(message, 'type', message_dict[attr])
+                else:
+                    setattr(message, attr, message_dict[attr])
         return message

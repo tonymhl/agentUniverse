@@ -5,9 +5,11 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: llm_output.py
-from typing import Any
+from typing import Any, Optional
 
 from pydantic import BaseModel
+
+from agentuniverse.agent.memory.message import Message
 
 
 class LLMOutput(BaseModel):
@@ -17,4 +19,6 @@ class LLMOutput(BaseModel):
     text: str
 
     """The raw data of the llm output."""
-    raw: Any
+    raw: Optional[Any] = None
+
+    message: Optional[Message] = None

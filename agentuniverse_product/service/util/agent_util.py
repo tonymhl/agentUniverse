@@ -391,6 +391,12 @@ def update_agent_config(agent: Agent, agent_dto: AgentDTO, agent_config_path: st
         if llm_dto.model_name:
             agent_updates['profile.llm_model.model_name'] = agent_dto.llm.model_name[0]
             agent.agent_model.profile.get('llm_model')['model_name'] = agent_dto.llm.model_name[0]
+        if not llm_dto.model_name:
+            llm: LLM = LLMManager().get_instance_obj(llm_dto.id)
+            llm_model = agent.agent_model.profile.get('llm_model', {})
+            llm_model.pop('model_name', None)
+            agent_updates['profile.llm_model.model_name'] = llm.model_name
+
     if agent_dto.tool is not None:
         tool_dto_list: List[ToolDTO] = agent_dto.tool
         tool_name_list = [tool_dto.id for tool_dto in tool_dto_list]

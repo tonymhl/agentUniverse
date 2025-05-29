@@ -20,6 +20,8 @@ llm = ['${ROOT_PACKAGE}.intelligence.agentic.llm']
 planner = []
 # Scan and register tool components for all paths under this list, with priority over the default.
 tool = ['${ROOT_PACKAGE}.intelligence.agentic.tool']
+# Scan and register toolkit components for all paths under this list, with priority over the default.
+toolkit = ['${ROOT_PACKAGE}.intelligence.agentic.toolkit']
 # Scan and register memory components for all paths under this list, with priority over the default.
 memory = ['${ROOT_PACKAGE}.intelligence.agentic.memory']
 # Scan and register service components for all paths under this list, with priority over the default.
@@ -44,6 +46,8 @@ memory_compressor = ['${ROOT_PACKAGE}.intelligence.agentic.memory.memory_compres
 memory_storage = ['${ROOT_PACKAGE}.intelligence.agentic.memory.memory_storage']
 # Scan and register log_sink components for all paths under this list, with priority over the default.
 log_sink = ['${ROOT_PACKAGE}.intelligence.utils.log_sink']
+
+llm_channel = ['${ROOT_PACKAGE}.intelligence.agentic.llm']
 
 [SUB_CONFIG_PATH]
 # Log config file path, an absolute path or a relative path based on the dir where the current config file is located.

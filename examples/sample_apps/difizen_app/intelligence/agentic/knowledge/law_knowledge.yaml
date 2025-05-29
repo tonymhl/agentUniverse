@@ -1,0 +1,16 @@
+name: "law_knowledge"
+description: "中国民法与刑法相关的知识库"
+stores:
+    - "civil_law_chroma_store"
+    - "criminal_law_chroma_store"
+    - "civil_law_sqlite_store"
+    - "criminal_law_sqlite_store"
+query_paraphrasers:
+    - "custom_query_keyword_extractor"
+insert_processors:
+    - "recursive_character_text_splitter"
+post_processors:
+    - "dashscope_reranker"
+readers:
+    pdf: "default_pdf_reader"
+meta_class: difizen_app.intelligence.agentic.knowledge.law_knowledge.LawKnowledge

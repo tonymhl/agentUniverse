@@ -5,7 +5,6 @@
 # @Author  :
 # @Email   :
 # @FileName: test_rag_agent.py
-
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.base.agentuniverse import AgentUniverse
@@ -28,18 +27,3 @@ def chat(question: str, session_id=None):
 if __name__ == '__main__':
     chat(question="分析下巴菲特减持比亚迪的原因", session_id="test-01")
     chat(question="我刚才问了什么问题", session_id="test-01")
-
-# class DemoAgentTest(unittest.TestCase):
-#     """
-#     Test cases for the rag agent
-#     """
-#
-#     def setUp(self) -> None:
-#         pass
-#
-#     def test_demo_agent(self):
-#         chat("分析下巴菲特减持比亚迪的原因")
-#
-#
-# if __name__ == '__main__':
-#     unittest.main()

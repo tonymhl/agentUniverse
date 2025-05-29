@@ -47,10 +47,11 @@ class PromptConfiger(ComponentConfiger):
                 path = Path(configer.path)
                 self.__metadata_version = f"{path.parent.name}.{path.stem}"
             # set the prompt default module and class
-            if self.metadata_module is None:
-                self.metadata_module = 'agentuniverse.prompt.prompt'
-            if self.metadata_class is None:
-                self.metadata_class = 'Prompt'
+            if self.meta_class is None:
+                if self.metadata_module is None:
+                    self.metadata_module = 'agentuniverse.prompt.prompt'
+                if self.metadata_class is None:
+                    self.metadata_class = 'Prompt'
         except Exception as e:
             raise Exception(f"Failed to parse the Prompt configuration: {e}")
         return self

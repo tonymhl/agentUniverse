@@ -20,7 +20,7 @@ from agentuniverse.base.context.framework_context_manager import FrameworkContex
 
 FrameworkContextManager().set_context("context_var", "value")
 ```
-You can create a new context variable directly using `FrameworkContextManager` within the AgentUniverse framework. Variables created in this manner will persist throughout the entire lifecycle of the thread or coroutine in which they are created. These variables can be manually deleted using the following code:
+You can create a new context variable directly using `FrameworkContextManager` within the agentUniverse framework. Variables created in this manner will persist throughout the entire lifecycle of the thread or coroutine in which they are created. These variables can be manually deleted using the following code:
 ```python
 from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 

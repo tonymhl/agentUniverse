@@ -1,6 +1,6 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
-
+import asyncio
 # @Time    : 2024/3/22 15:44
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
@@ -94,14 +94,14 @@ class Knowledge(ComponentBase):
             thread_name_prefix="Knowledge query"
         )
 
-    def _load_data(self,  *args: Any, **kwargs: Any) -> List[Document]:
+    def _load_data(self, *args: Any, **kwargs: Any) -> List[Document]:
         # check if source is a local file or remote url
         if kwargs.get("source_path"):
             source_path = kwargs.get("source_path")
         else:
             raise Exception("No file to load.")
         url_pattern = re.compile(
-            r'^(https?:\/\/)?' 
+            r'^(https?:\/\/)?'
             r'((([a-zA-Z0-9]{1,256}\.[a-zA-Z0-9]{1,6})|'
             r'(\d{1,3}\.){3}\d{1,3})'
             r'(:\d{1,5})?)'
@@ -277,7 +277,16 @@ class Knowledge(ComponentBase):
         """
         parse_query = parse_json_markdown(query)
         knowledge = self.query_knowledge(**parse_query)
-        return "This is Query Result:\n"+self.to_llm(knowledge)
+        return "This is Query Result:\n" + self.to_llm(knowledge)
+
+    async def async_langchain_query(self, query: str) -> str:
+        """Query the knowledge using LangChain.
+
+        Query documents from the store and return the results.
+        """
+        parse_query = parse_json_markdown(query)
+        knowledge = await asyncio.to_thread(self.query_knowledge, **parse_query)
+        return "This is Query Result:\n" + self.to_llm(knowledge)
 
     def as_langchain_tool(self) -> LangchainTool:
         """Convert the Knowledge object to a LangChain tool.
@@ -298,6 +307,27 @@ class Knowledge(ComponentBase):
             name=self.name,
             description=self.description or '' + args_description,
             func=self.langchain_query,
+        )
+
+    async def async_as_langchain_tool(self) -> LangchainTool:
+        """Convert the Knowledge object to a LangChain tool.
+
+        Returns:
+            Any: the LangChain tool object
+        """
+        args_description = """
+        This is a knowledge base tool, which stores the content you may need. To use this tool, you need to give a json string with the following format:
+        ```json
+        {
+            "query_str": "<your query here>",
+            "similarity_top_k": <number of results to return>,
+        }
+        ```
+        """
+        return LangchainTool(
+            name=self.name,
+            description=self.description or '' + args_description,
+            func=self.async_langchain_query,
         )
 
     def create_copy(self):

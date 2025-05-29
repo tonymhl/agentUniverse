@@ -5,11 +5,10 @@
 # @Author  : fanen.lhy
 # @Email   : fanen.lhy@antgroup.com
 # @FileName: trace_manager.py
-from contextvars import ContextVar, Token
-from agentuniverse.base.context.framework_context_manager import \
-    FrameworkContextManager
-from agentuniverse.base.util.tracing.au_trace_context import AuTraceContext
+from contextvars import ContextVar
+
 from agentuniverse.base.annotation.singleton import singleton
+from agentuniverse.base.util.tracing.au_trace_context import AuTraceContext
 
 
 @singleton
@@ -20,6 +19,9 @@ class AuTraceManager:
 
     def set_context_class(self, context_class):
         self.context_class = context_class
+
+    def recover_trace(self, trace_context):
+        self.context_instance.set(trace_context)
 
     def reset_trace(self):
         self.context_instance.set(None)
@@ -46,7 +48,7 @@ class AuTraceManager:
         self.trace_context.set_session_id(session_id)
 
     def get_session_id(self):
-        return self.trace_context.trace_id
+        return self.trace_context.session_id
 
     def set_trace_id(self, trace_id):
         self.trace_context.set_trace_id(trace_id)

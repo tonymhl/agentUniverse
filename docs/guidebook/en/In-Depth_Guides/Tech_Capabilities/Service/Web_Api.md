@@ -1,6 +1,6 @@
 # Web API
 
-The Web Server of AgentUniverse provides several API interfaces for calling Agent services, allowing developers to call Agent services through web api.
+The Web Server of agentUniverse provides several API interfaces for calling Agent services, allowing developers to call Agent services through web api.
 
 For convenience, let's assume that the Web Server is started on port 8888 locally and has registered an Agent service named `demo_service`：
 ```yaml

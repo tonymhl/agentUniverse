@@ -80,7 +80,7 @@ metadata:
 Participants in the agentUniverse discussion group configure `demo_memory` in the `sample_apps/discussion_group_app` project by default to store common memory information for the entire discussion group.
 
 ### Prompt Configuration
-The prompts are managed through the prompt_version. The default prompt files for the AgentUniverse (aU) discussion group agents are configured in the intelligence/agentic/prompt directory. Corresponding to both Chinese and English versions (e.g., discussion_group_agent_xx.yaml and participant_agent_xx.yaml), users can modify the prompt_version in the agent configuration to achieve rapid switching.
+The prompts are managed through the prompt_version. The default prompt files for the agentUniverse (aU) discussion group agents are configured in the intelligence/agentic/prompt directory. Corresponding to both Chinese and English versions (e.g., discussion_group_agent_xx.yaml and participant_agent_xx.yaml), users can modify the prompt_version in the agent configuration to achieve rapid switching.
 
 ### Tool Configuration
 Two participants in the agentUniverse discussion group are configured with google_search_tool by default. Users have the option to change the `tool name` in the `participant_agent_xxx.yaml` file, located under the intelligence/agentic/agent/agent_instance/discussion_agent_case directory within the `sample_apps/discussion_group_app` project, in order to switch between different tool calls.

@@ -15,7 +15,7 @@ from langchain_core.language_models import BaseLanguageModel
 from langchain_core.prompts import BasePromptTemplate
 from langchain_core.runnables import RunnableConfig, RunnablePassthrough, Runnable
 from langchain_core.tools import BaseTool, ToolsRenderer, render_text_description
-
+from datetime import datetime
 from agentuniverse.agent.template.agent_template import AgentTemplate
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
 from agentuniverse.base.util.agent_util import assemble_memory_input, assemble_memory_output
@@ -51,6 +51,9 @@ class ReActAgentTemplate(AgentTemplate):
         agent_input['tools'] = tools_context[0]
         agent_input['tool_names'] = tools_context[1]
         agent_input['agent_scratchpad'] = ''
+        current_time = datetime.now()
+        current_time_formatted = current_time.strftime("%Y-%m-%d %H:%M:%S")
+        agent_input['current_time'] = current_time_formatted
         return agent_input
 
     def parse_result(self, agent_result: dict) -> dict:
@@ -80,7 +83,7 @@ class ReActAgentTemplate(AgentTemplate):
                                        llm: LLM, prompt: Prompt, **kwargs) -> dict:
         self.load_memory(memory, agent_input)
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)
-        lc_tools: List[LangchainTool] = self._convert_to_langchain_tool()
+        lc_tools: List[LangchainTool] = await self._async_convert_to_langchain_tool()
         agent = self.create_react_agent(llm.as_langchain(), lc_tools, prompt.as_langchain(),
                                         stop_sequence=self.stop_sequence,
                                         bind_params=self.agent_model.llm_params())
@@ -157,6 +160,22 @@ class ReActAgentTemplate(AgentTemplate):
             for agent_name in self.agent_names:
                 agent: Agent = AgentManager().get_instance_obj(agent_name)
                 lc_tools.append(agent.as_langchain_tool())
+        return lc_tools
+
+    async def _async_convert_to_langchain_tool(self) -> list[LangchainTool]:
+        lc_tools = []
+        if self.tool_names:
+            for tool_name in self.tool_names:
+                tool: Tool = ToolManager().get_instance_obj(tool_name)
+                lc_tools.append(await tool.async_as_langchain())
+        if self.knowledge_names:
+            for knowledge_name in self.knowledge_names:
+                knowledge: Knowledge = KnowledgeManager().get_instance_obj(knowledge_name)
+                lc_tools.append(await knowledge.async_as_langchain_tool())
+        if self.agent_names:
+            for agent_name in self.agent_names:
+                agent: Agent = AgentManager().get_instance_obj(agent_name)
+                lc_tools.append(await agent.async_as_langchain_tool())
         return lc_tools
 
     def _get_run_config(self, input_object: InputObject) -> RunnableConfig:

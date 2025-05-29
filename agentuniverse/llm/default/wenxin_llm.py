@@ -137,6 +137,9 @@ class WenXinLLM(LLM):
 
     def as_langchain(self) -> BaseLanguageModel:
         """Return an instance of the LangChain `BaseLanguageModel` class."""
+        self.init_channel()
+        if self._channel_instance:
+            return self._channel_instance.as_langchain()
         return WenXinLangChainInstance(llm=self)
 
     def initialize_by_component_configer(self, component_configer: LLMConfiger) -> 'WenXinLLM':

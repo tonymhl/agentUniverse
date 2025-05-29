@@ -8,7 +8,7 @@ In this section, we will show you how to:
 
 ## Environment and Application Engineering Preparation
 ### Application Engineering Preparation
-We have placed the sample of product module within the sample_standard_app project of agentUniverse. You can access and view them [here](../../../../../examples/sample_standard_app/platform/difizen/product). These modules can be configured in the background using YAML file, and additionally, the functions can be automatically created and managed via the product page.
+We have placed the sample of product module within the sample_standard_app project of agentUniverse. You can access and view them [here](../../../../../examples/sample_apps/difizen_app). These modules can be configured in the background using YAML file, and additionally, the functions can be automatically created and managed via the product page.
 
 
 ### Installing Dependencies
@@ -34,7 +34,7 @@ Of course, when utilizing the agent, you need to preconfigure the various LLM mo
 
 ## Using the agentUniverse Product Platform
 ### Starting the Product Service
-To start the product service with a single click, run the [product_application](../../../../../examples/sample_standard_app/bootstrap/platform/product_application.py) file located in `sample_standard_app/bootstrap/platform` .
+To start the product service with a single click, run the [product_application](../../../../../examples/sample_apps/difizen_app/bootstrap/platform/product_application.py) file located in `sample_standard_app/bootstrap/platform` .
 ![img.png](../../../_picture/product_start.png)
 
 Upon successful initiation, it will automatically redirect you to the product homepage, which features system presets as well as your customized Agent, Tool and Knowledge product modules.
@@ -47,7 +47,7 @@ The conversation management system incorporates the last 10 conversation history
 
 ### Debugging the Agent
 On the product homepage, click the edit button on the left of the agent to access the online debugging page.
-You have the ability to debug the agent's Prompt, Tool, Knowledge, and LLM online. Simply click the save button, and the aU-product (AgentUniverse framework) will automatically save the configuration to the corresponding YAML file.
+You have the ability to debug the agent's Prompt, Tool, Knowledge, and LLM online. Simply click the save button, and the aU-product (agentUniverse framework) will automatically save the configuration to the corresponding YAML file.
 ![agentuniverse_product_agent_editor](../../../_picture/agentuniverse_product_agent_editor.png)
 
 To view the Trace information, including token consumption, call chain, and latency of the agent's specific invocation process, click the debug button located in the upper right corner of the image provided above.
@@ -82,6 +82,6 @@ As shown in the yaml file above:
 In the `config.toml`file for global settings, configure the package scan path that corresponds to the product module. With a single click, you can launch the product platform and view the corresponding agent, tool, and knowledge information.
 
 ## More
-The AgentUniverse product platform is undergoing continuous iteration, and in the future, even more convenient and useful features will be available for community users to experience. We warmly welcome your valuable suggestions and feedback.
+The agentUniverse product platform is undergoing continuous iteration, and in the future, even more convenient and useful features will be available for community users to experience. We warmly welcome your valuable suggestions and feedback.
 This feature has been jointly launched by [difizen](https://github.com/difizen/magent) and agentUniverse.
 Let's explore and make progress together!

@@ -1,0 +1,7 @@
+name: 'deepseek_llm'
+description: 'demo deepseek llm with spi'
+model_name: 'deepseek-chat'
+api_key: '${DEEPSEEK_API_KEY}'
+max_tokens: 1000
+streaming: True
+meta_class: agentuniverse.llm.default.deep_seek_openai_style_llm.DefaultDeepSeekLLM

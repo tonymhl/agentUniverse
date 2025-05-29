@@ -39,8 +39,14 @@ class LLMManager(ComponentManagerBase):
                 llm_configer = llm_configer_map.get(component_instance_name)
                 if llm_configer:
                     # Dynamically import the module and retrieve the class specified in the configuration
-                    module = importlib.import_module(llm_configer.metadata_module)
-                    component_clz = getattr(module, llm_configer.metadata_class)
+                    if llm_configer.meta_class:
+                        metadata_module = '.'.join(llm_configer.meta_class.split('.')[:-1])
+                        metadata_class = llm_configer.meta_class.split('.')[-1]
+                        module = importlib.import_module(metadata_module)
+                        component_clz = getattr(module, metadata_class)
+                    else:
+                        module = importlib.import_module(llm_configer.metadata_module)
+                        component_clz = getattr(module, llm_configer.metadata_class)
                     # Initialize the llm instance using the configuration
                     instance_obj: LLM = component_clz().initialize_by_component_configer(llm_configer)
                     if instance_obj:

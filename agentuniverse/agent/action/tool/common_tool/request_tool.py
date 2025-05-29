@@ -28,8 +28,8 @@ class RequestTool(Tool):
         """Strips quotes from the url."""
         return url.strip("\"'")
 
-    def execute(self, tool_input: ToolInput):
-        input_params: str = tool_input.get_data('input')
+    def execute(self, input: str):
+        input_params: str = input
         if self.json_parser:
             try:
                 parse_data = parse_json_markdown(input_params)
@@ -39,6 +39,19 @@ class RequestTool(Tool):
                 return str(e)
         else:
             return self.execute_by_method(input_params)
+
+    async def async_execute_by_method(self, url: str, data: dict = None, **kwargs):
+        url = self._clean_url(url)
+        if self.method == 'GET':
+            return await self.requests_wrapper.aget(url)
+        elif self.method == 'POST':
+            return await self.requests_wrapper.apost(url, data=data)
+        elif self.method == 'PUT':
+            return await self.requests_wrapper.aput(url, data=data)
+        elif self.method == 'DELETE':
+            return await self.requests_wrapper.adelete(url)
+        else:
+            raise ValueError(f"Unsupported method: {self.method}")
 
     def execute_by_method(self, url: str, data: dict = None, **kwargs):
         url = self._clean_url(url)

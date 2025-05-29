@@ -5,7 +5,6 @@
 # @Author  :
 # @Email   :
 # @FileName: demo_agent_template.py
-
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.template.agent_template import AgentTemplate
 

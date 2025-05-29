@@ -1,6 +1,6 @@
 # Web API
 
-AgentUniverse的Web Server提供了数个调用Agent服务的API接口，允许开发者按自己的需求从外部调用Agent服务。
+agentUniverse的Web Server提供了数个调用Agent服务的API接口，允许开发者按自己的需求从外部调用Agent服务。
 
 为了方便说明，我们假设Web Server启动在本地的8888端口上，并注册了一个名为`demo_service`的Agent服务：
 

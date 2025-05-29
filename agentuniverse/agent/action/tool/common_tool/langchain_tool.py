@@ -18,10 +18,11 @@ class LangChainTool(Tool):
     description: Optional[str] = ""
     tool: Optional[BaseTool] = None
 
-    def execute(self, tool_input: ToolInput):
-        input = tool_input.get_data("input")
-        callbacks = tool_input.get_data("callbacks", None)
+    def execute(self, input: str, callbacks):
         return self.tool.run(input, callbacks=callbacks)
+
+    async def async_execute(self, input: str, callbacks):
+        return await self.tool.arun(input, callbacks=callbacks)
 
     def initialize_by_component_configer(self, component_configer: ToolConfiger) -> 'Tool':
         super().initialize_by_component_configer(component_configer)

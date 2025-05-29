@@ -78,6 +78,9 @@ class OllamaLLM(LLM):
             yield LLMOutput(text=line.get("message").get('content'), raw=json.dumps(line))
 
     def as_langchain(self) -> BaseLanguageModel:
+        self.init_channel()
+        if self._channel_instance:
+            return self._channel_instance.as_langchain()
         return OllamaLangchainInstance(
             self
         )

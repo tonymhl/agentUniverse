@@ -5,6 +5,7 @@
 # @Author  : jerry.zzw 
 # @Email   : jerry.zzw@antgroup.com
 # @FileName: component_configer.py
+import importlib
 from typing import Optional
 
 from agentuniverse.base.component.component_enum import ComponentEnum
@@ -21,6 +22,7 @@ class ComponentConfiger(object):
         self.__metadata_type: Optional[str] = None
         self.__metadata_module: Optional[str] = None
         self.__metadata_class: Optional[str] = None
+        self.__meta_class: Optional[str] = None
         self.__yaml_func_instance = None
         self.__default_llm_configer: DefaultLLMConfiger = None
 
@@ -68,6 +70,10 @@ class ComponentConfiger(object):
     def default_llm_configer(self, value: DefaultLLMConfiger):
         self.__default_llm_configer = value
 
+    @property
+    def meta_class(self) -> str:
+        return self.__meta_class
+
     def load(self) -> 'ComponentConfiger':
         """Load the configuration by the Configer object.
         Returns:
@@ -93,6 +99,7 @@ class ComponentConfiger(object):
                 self.__metadata_class = configer.value.get('metadata').get('class')
             elif configer.path and 'prompt' in configer.path:
                 self.__metadata_type = ComponentEnum.PROMPT.value
+            self.__meta_class = configer.value.get('meta_class')
         except Exception as e:
             raise Exception(f"Failed to parse the component configuration: {e}")
 
@@ -104,4 +111,11 @@ class ComponentConfiger(object):
         Returns:
             Optional[str]: the type of the component
         """
-        return self.__metadata_type
+        if self.__meta_class:
+            metadata_module = '.'.join(self.__meta_class.split('.')[:-1])
+            metadata_class = self.__meta_class.split('.')[-1]
+            module = importlib.import_module(metadata_module)
+            clz = getattr(module, metadata_class)
+            return clz().component_type.value
+        else:
+            return self.__metadata_type

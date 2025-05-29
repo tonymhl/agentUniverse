@@ -13,7 +13,12 @@ class MockSearchTool(Tool):
     """The demo google search mock tool.
     """
 
-    def execute(self, tool_input: ToolInput):
+    def execute(self, input: str):
+        # get top10 results from mock search.
+        res = self.mock_api_res()
+        return res
+
+    async def async_execute(self, tool_input: ToolInput):
         input = tool_input.get_data("input")
         # get top10 results from mock search.
         res = self.mock_api_res()

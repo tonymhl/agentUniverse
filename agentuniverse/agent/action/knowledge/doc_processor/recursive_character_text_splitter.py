@@ -18,19 +18,31 @@ from agentuniverse.base.config.component_configer.component_configer import \
 
 
 class RecursiveCharacterTextSplitter(DocProcessor):
+    """Splits text recursively using a hierarchy of character separators."""
     chunk_size: int = 200
     chunk_overlap: int = 20
     separators: List[str] = ["\n\n", "\n", " ", ""]
-    splitter: Optional[Splitter] = None
+    __splitter: Optional[Splitter] = None
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.splitter = Splitter(separators=self.separators,
-                                 chunk_size=self.chunk_size,
-                                 chunk_overlap=self.chunk_overlap)
+    @property
+    def splitter(self) -> Splitter:
+        if not self.__splitter:
+            self.__splitter = Splitter(separator=self.separator,
+                                       chunk_size=self.chunk_size,
+                                       chunk_overlap=self.chunk_overlap)
+        return self.__splitter
 
     def _process_docs(self, origin_docs: List[Document], query: Query = None) -> \
             List[Document]:
+        """Split documents recursively using character separators.
+        
+        Args:
+            origin_docs: List of documents to be split.
+            query: Optional query object (not used in this processor).
+            
+        Returns:
+            List of split document chunks.
+        """
         lc_doc_list = self.splitter.split_documents(Document.as_langchain_list(
             origin_docs
         ))
@@ -38,6 +50,14 @@ class RecursiveCharacterTextSplitter(DocProcessor):
 
     def _initialize_by_component_configer(self,
                                          doc_processor_configer: ComponentConfiger) -> 'DocProcessor':
+        """Initialize splitter parameters from configuration.
+        
+        Args:
+            doc_processor_configer: Configuration object containing splitter parameters.
+            
+        Returns:
+            Initialized document processor instance.
+        """
         super()._initialize_by_component_configer(doc_processor_configer)
         if hasattr(doc_processor_configer, "chunk_size"):
             self.chunk_size = doc_processor_configer.chunk_size
@@ -45,9 +65,6 @@ class RecursiveCharacterTextSplitter(DocProcessor):
             self.chunk_overlap = doc_processor_configer.chunk_overlap
         if hasattr(doc_processor_configer, "separators"):
             self.separators = doc_processor_configer.separators
-        self.splitter = Splitter(separators=self.separators,
-                                 chunk_size=self.chunk_size,
-                                 chunk_overlap=self.chunk_overlap)
         return self
 
 

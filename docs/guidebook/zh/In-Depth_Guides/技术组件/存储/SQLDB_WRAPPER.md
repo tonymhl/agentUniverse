@@ -1,17 +1,17 @@
 # SQLDB Wrapper
 
-AgentUniverse基于SQLAlchemy和langchain的SQLDatabase，提供了一个方便用户使用大多数基于SQL的数据库的`SQLDBWrapper`类，如SQLite、MySQL、Oracle等，具体请参考[SQLAlchemy官方网站](https://docs.sqlalchemy.org/en/20/dialects/)。通过`SQLDBWrapper`，您可以方便的同时管理多种不同的数据库连接对象。
+agentUniverse基于SQLAlchemy和langchain的SQLDatabase，提供了一个方便用户使用大多数基于SQL的数据库的`SQLDBWrapper`类，如SQLite、MySQL、Oracle等，具体请参考[SQLAlchemy官方网站](https://docs.sqlalchemy.org/en/20/dialects/)。通过`SQLDBWrapper`，您可以方便的同时管理多种不同的数据库连接对象。
 
 ## 注册方式
 
 ### 第一步：配置扫描路径
-AgentUniverse通过在应用启动时扫描配置路径的方式寻找SQLDBWrapper的配置文件并进行自动注册，扫描的路径配置在配置文件`config.toml`中：
+agentUniverse通过在应用启动时扫描配置路径的方式寻找SQLDBWrapper的配置文件并进行自动注册，扫描的路径配置在配置文件`config.toml`中：
 ```toml
 [CORE_PACKAGE]
 default = ['default_scan_path']
 sqldb_wrapper = ['sqldb_wrapper_scan_path']
 ```
-AgentUniverse默认会扫描`default`或`sqldb_wrapper`中的所有路径，`sqldb_wrapper`下的路径配置优先级高于`default`。
+agentUniverse默认会扫描`default`或`sqldb_wrapper`中的所有路径，`sqldb_wrapper`下的路径配置优先级高于`default`。
 
 
 ### 第二步：配置文件

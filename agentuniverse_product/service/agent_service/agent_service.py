@@ -230,7 +230,10 @@ class AgentService:
                 data = chunk_dict['process'].get('data')
                 if data:
                     yield_type = 'token' if 'chunk' in data else 'intermediate_steps'
-                    yield {'output': data.get('chunk' if yield_type == 'token' else 'output'),
+                    output = data.get('chunk' if yield_type == 'token' else 'output')
+                    if not isinstance(output, str) and isinstance(output, dict) and output.get('text'):
+                        output = output.get('text')
+                    yield {'output': output,
                            'type': yield_type,
                            'agent_id': data.get('agent_info', {}).get('name', '')}
             elif "result" in chunk_dict or "error" in chunk_dict:
@@ -239,6 +242,8 @@ class AgentService:
                 response_time = round((end_time - start_time) * 1000, 2)
                 if "result" in chunk_dict:
                     output = chunk_dict['result'].get('output')
+                    if not isinstance(output, str) and isinstance(output, dict) and output.get('text'):
+                        output = output.get('text')
                     # add agent chat history
                     session_id, message_id = AgentService().add_agent_chat_history(
                         agent_id, session_id, input, output, datetime.fromtimestamp(end_time)
