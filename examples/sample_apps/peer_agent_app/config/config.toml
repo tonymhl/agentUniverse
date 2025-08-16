@@ -2,6 +2,11 @@
 # The app name will be applied to all processes including agent service integration.
 appname = 'demo_app'
 
+# The placeholder "${ROOT_PACKAGE}" is mapped to the value of "ROOT_PACKAGE" defined in this file.
+# It allows you to conveniently manage multiple different agent applications by configuring the root package value.
+[PACKAGE_PATH_INFO]
+ROOT_PACKAGE = 'peer_agent_app'
+
 [CORE_PACKAGE]
 # Perform a full component scan and registration for all the paths under this list.
 default = ['peer_agent_app.intelligence.agentic']

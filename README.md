@@ -45,28 +45,6 @@ The LLM model integration can be accomplished with simple configuration, current
 
 For example, to use deepseek model, you can simply set DEEPSEEK_API_KEY value in the custom_key.toml file, and set the llm_model name in the agent configuration file to 'default_deepseek_llm' and you're all set. For more information about llm configuration, please refer to [switch-the-llm](https://github.com/agentuniverse-ai/agentUniverse/blob/master/docs/guidebook/en/Get_Start/2.Run_Your_First_Tutorial_Example.md#switch-the-llm).
 
-
-****************************************
-
-## Citation
-
-The agentUniverse project is supported by the following research achievements.
-
-BibTeX formatted
-```text
-@misc{wang2024peerexpertizingdomainspecifictasks,
-      title={PEER: Expertizing Domain-Specific Tasks with a Multi-Agent Framework and Tuning Methods}, 
-      author={Yiying Wang and Xiaojing Li and Binzhu Wang and Yueyang Zhou and Han Ji and Hong Chen and Jinshi Zhang and Fei Yu and Zewei Zhao and Song Jin and Renji Gong and Wanqing Xu},
-      year={2024},
-      eprint={2407.06985},
-      archivePrefix={arXiv},
-      primaryClass={cs.AI},
-      url={https://arxiv.org/abs/2407.06985}, 
-}
-```
-Overview: This document introduces in detailed the mechanisms and principles underlying the PEER multi-agent framework. The experimental section assigned scores across seven dimensions: completeness, relevance, conciseness, factualness, logicality, structure, and comprehensiveness, with a maximum score of 5 points for each dimension. On average, the PEER model scored higher in each evaluation dimension compared to BabyAGI, and show notable advantages particularly in completeness, relevance, logicality, structure, and comprehensiveness. Furthermore, when tested with the GPT-3.5 Turbo (16k) model, the PEER model achieved a superior accuracy rate of 83% compared to BabyAGI, and with the GPT-4 model, it achieved an accuracy rate of 81%. For more details, please refer to the document. 
-🔗https://arxiv.org/pdf/2407.06985
-
 ****************************************
 
 ## Table of Contents
@@ -214,6 +192,30 @@ https://private-user-images.githubusercontent.com/39180831/355437700-192f712d-1b
 
 ### twitter
 ID: [@agentuniverse_](https://x.com/agentuniverse_)
+
+
+****************************************
+
+## Citation
+
+The PEER multi-agent framework build in agentUniverse project is supported by the following research achievements.
+
+BibTeX formatted
+```text
+@misc{wang2024peerexpertizingdomainspecifictasks,
+      title={PEER: Expertizing Domain-Specific Tasks with a Multi-Agent Framework and Tuning Methods}, 
+      author={Yiying Wang and Xiaojing Li and Binzhu Wang and Yueyang Zhou and Han Ji and Hong Chen and Jinshi Zhang and Fei Yu and Zewei Zhao and Song Jin and Renji Gong and Wanqing Xu},
+      year={2024},
+      eprint={2407.06985},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2407.06985}, 
+}
+```
+Overview: This document introduces in detailed the mechanisms and principles underlying the PEER multi-agent framework. The experimental section assigned scores across seven dimensions: completeness, relevance, conciseness, factualness, logicality, structure, and comprehensiveness, with a maximum score of 5 points for each dimension. On average, the PEER model scored higher in each evaluation dimension compared to BabyAGI, and show notable advantages particularly in completeness, relevance, logicality, structure, and comprehensiveness. Furthermore, when tested with the GPT-3.5 Turbo (16k) model, the PEER model achieved a superior accuracy rate of 83% compared to BabyAGI, and with the GPT-4 model, it achieved an accuracy rate of 81%. For more details, please refer to the document. 
+🔗https://arxiv.org/pdf/2407.06985
+
+****************************************
 
 ### Acknowledgements
 
