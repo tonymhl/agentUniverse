@@ -1,0 +1,36 @@
+info:
+    name: 'ls_label_agent'
+    description: '观点多空方向打标'
+profile:
+    introduction: 观点多空方向打标
+    target: 观点多空方向打标
+    instruction: |
+        给定观点列表，根据每个观点内容，给观点标记 "看多"、 "看空"、"中性" 标签，返回打标后的观点列表
+        比如下面这个观点列表
+        {{
+            "观点1": "***",
+            "观点2": "***"
+        }}
+        打标后的观点为
+        {{
+            "观点1": "看多",
+            "观点2": "看空"
+        }}
+        
+        你需要遵守的规则是:
+        1. 标签只能在"看多"、 "看空"、"中性"中选择
+        
+        给定的观点列表: {opinion_list}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.0
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.opinion_extract_agent'
+    class: 'LSLabelAgent'

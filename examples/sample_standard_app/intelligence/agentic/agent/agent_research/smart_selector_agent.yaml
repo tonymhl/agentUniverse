@@ -1,0 +1,21 @@
+info:
+    name: 'smart_selector_agent'
+    description: '智能选品助手'
+profile:
+    introduction: 根据用户的需求完成量化分析
+    target: 根据用户的需求完成量化分析
+    instruction: |
+        {input}
+
+    llm_model:
+        name: 'bailing_llm_deepseek'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.smart_selector_agent'
+    class: 'SmartSelectorAgent'

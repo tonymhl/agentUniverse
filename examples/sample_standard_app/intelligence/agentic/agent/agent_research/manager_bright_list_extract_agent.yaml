@@ -1,0 +1,36 @@
+info:
+    name: 'manager_bright_list_extract_agent'
+    description: '根据资料抽取基金经理亮点'
+profile:
+    introduction: 根据资料抽取基金经理亮点
+    target: 根据资料抽取基金经理亮点
+    instruction: |
+        根据给定的资料，从以下三个维度抽取其中基金经理的亮点特征:
+        * 教育经历: 包括学历，专业、成绩等
+        * 从业经历: 包括历任机构，从业经验、职位等
+        * 投研能力: 包括所获奖项、职业资格、研究体系等
+        每个特征形成一段概括性文案，返回的格式为一个标题加一段文案，比如:
+        {{
+            "美女学霸": "北大学霸，计算机应用专业硕士，中山市高考状元",
+            "宝藏老将": "投研经验丰富，超19年从业经验，超6年投资管理经验"
+        }}
+        
+        你需要遵守的规则是:
+        1. 你需要识别出给定资料中切实存在的基金经理个人特征，不要猜测编造，资料中没有提到的维度不用返回
+        2. 标题的表达要简洁有力, 文案的表达要通顺且富有感染力
+        3. 每个标题的字数不超过 8, 返回的特征数量不超过 {word_cnt}
+        
+        给定的资料: ```{input}````
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.0
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.asset_interpret_agent'
+    class: 'BrightListExtractAgent'

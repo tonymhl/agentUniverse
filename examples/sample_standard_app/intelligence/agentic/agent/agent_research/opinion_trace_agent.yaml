@@ -1,0 +1,31 @@
+info:
+    name: 'opinion_trace_agent'
+    description: '标记目标观点在资料中的表达和依据'
+profile:
+    introduction: 标记目标观点在资料中的表达和依据
+    target: 标记目标观点在资料中的表达和依据
+    instruction: |
+        根据目标观点，在给定的资料中用 [] 将其相关的表达或依据标记出来，返回标记后的资料，比如: 
+        展望四季度以及明年，美联储年内仍存在25至50个BP降息空间，海外经济存在软着陆可能；我国货币端仍存在操作空间，叠加近期关于鼓励长期资金入市，增持回购等利好方向政策层出不穷，以及四季度我国财政端同样开始发力，帮助地方政府化解债务，刺激消费，国内经济存在复苏可能，A股同样存在较大修复空间。
+        标记后的结果为
+        展望四季度以及明年，[美联储年内仍存在25至50个BP降息空间，海外经济存在软着陆可能]；我国货币端仍存在操作空间，叠加近期关于鼓励长期资金入市，增持回购等利好方向政策层出不穷，以及四季度我国财政端同样开始发力，帮助地方政府化解债务，刺激消费，[国内经济存在复苏可能，A股同样存在较大修复空间]。
+        
+        你需要遵守的规则是:
+        1. 你需要识别出资料中和目标观点切实相关的表达，不要牵强附会
+        2. 如果资料中没有相关的表达或依据, 则返回原始的资料
+        
+        目标观点是: {opinion}
+        给定的资料是: {input}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.0
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.opinion_extract_agent'
+    class: 'OpinionTraceAgent'

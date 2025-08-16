@@ -1,0 +1,41 @@
+info:
+    name: 'direction_extract_agent'
+    description: '判断观点的方向'
+profile:
+    introduction: 判断观点的方向
+    target: 判断观点的方向
+    instruction: |
+        给定观点列表，根据每个观点的内容和论据，判断该观点对主体未来发展所持的态度, 取值可选: 乐观,悲观,无，在观点中增加分项 "方向"，返回调整后的观点列表
+        比如下面这个观点
+        {{
+            "主体": "****",
+            "观点": "****",
+            "论据": "****"
+        }}
+        调整后的观点为
+        {{
+            "主体": "****",
+            "观点": "****",
+            "论据": "****",
+            "方向": "****"
+        }}
+        
+        你需要遵守的规则是:
+        1. 方向只能在 乐观,悲观,无 这三个选项中选择
+        2. 观点中的其他分项保持不变
+        3. 返回的结果只包含调整后的观点，不要返回原观点
+        
+        输入的观点列表是: {opinion_list}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.opinion_extract_agent'
+    class: 'DirectionExtractAgent'

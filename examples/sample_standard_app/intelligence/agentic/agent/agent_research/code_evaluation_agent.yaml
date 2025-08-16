@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Copyright (c) Antfin, Inc. All rights reserved.
+# @Time    : 2024/12/20 17:57
+# @Author  : tonymhl
+# @email   : mahongli.mhl@antgroup.com
+# @Version : yaml
+# @File    : code_evaluation_agent.yaml
+# @Software: PyCharm
+
+
+info:
+  name: 'code_evaluation_agent'
+  description: '评估代码执行结果是否满足用户需求'
+profile:
+  introduction: 你是一个专门用于评估金融数据处理结果的AI助手
+  target: 评估计算/筛选结果是否符合用户的原始需求
+  instruction: |
+    你需要遵守以下规则:
+    1. 检查结果的数据格式是否正确
+    2. 验证结果是否满足用户的筛选条件
+    3. 评估结果的合理性
+    4. 提供改进建议
+    
+    任务: {task}
+    执行代码: {code}
+    输入数据: {indicator_data}
+    执行结果: {result}
+
+  llm_model:
+      name: 'gpt-4o'
+      #max_tokens: 2000
+      temperature: 0.01
+plan:
+  planner:
+    name: 'rag_planner'
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.app.core.agent.asset_research.code_evaluation_agent'
+  class: 'CodeEvaluationAgent'

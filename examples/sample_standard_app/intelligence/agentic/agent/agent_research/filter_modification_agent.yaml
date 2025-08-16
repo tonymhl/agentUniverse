@@ -1,0 +1,35 @@
+info:
+    name: 'filter_modification_agent'
+    description: '根据用户的标的筛选逻辑修改筛选条件'
+profile:
+    introduction: 根据用户的标的筛选逻辑修改筛选条件
+    target: 根据用户的标的筛选逻辑修改筛选条件
+    instruction: |
+        根据给定的指标列表、用户输入以及当前的筛选条件, 修改筛选条件的分项口径，其中筛选条件包含的所有分项口径有:
+        1. 资产类型: 标的所在的大类资产类型，可选：公募基金，A股，私募基金
+        2. 产品池：标的所在的产品池，可选：所有，固收+，偏股基金
+        3. 条件表达式：多个指标组合起来的筛选逻辑表达式，表达式中使用指标代码来确定指标，指标代码使用$包裹起来，可用的逻辑运算符有: and(且), or(或者), not(非)
+        4. 开始时间
+        5. 截止时间
+        
+        你需要遵守的规则是:
+        1. 条件表达式中使用的指标必须在给定的指标列表中
+        2. 用户没有修改的部分保持原值
+        3. 输出的结果格式和当前的筛选条件格式保持一致
+        
+        {filter}
+        给定的指标列表: {indicator_list}
+        用户的输入是: {input}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.sa_agent'
+    class: 'FilterModificationAgent'

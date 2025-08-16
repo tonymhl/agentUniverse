@@ -1,0 +1,252 @@
+/* 主题颜色 */
+:root {
+    --primary-color: #1f77b4;
+    --secondary-color: #ff7f0e;
+    --success-color: #2ca02c;
+    --warning-color: #d62728;
+    --background-color: #f0f2f6;
+}
+
+/* 整体布局 */
+.main {
+    padding: 2rem;
+    padding-bottom: 100px !important;
+    background-color: var(--background-color);
+}
+
+/* 欢迎页面布局 */
+.welcome-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+    padding: 3rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.welcome-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.welcome-header h1 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* 示例卡片 */
+.example-card {
+    background-color: var(--primary-color);
+    padding: 2rem;
+    border-radius: 12px;
+    border-left: 5px solid var(--primary-color);
+    margin: 1rem 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+}
+
+.example-card:hover {
+    transform: translateY(-2px);
+}
+
+.example-card h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+/* 数据展示容器 */
+.data-container {
+    background-color: var(--primary-color);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 聊天界面 */
+.stChatInput {
+    min-height: 50px !important;
+    max-height: 100px !important;
+    font-size: 1rem !important;
+    padding: 0.75rem !important;
+    border-radius: 8px !important;
+    width: 95% !important;
+    margin: 0 auto !important;
+    display: block !important;
+}
+
+/* 聊天输入框容器 */
+[data-testid="stChatInputContainer"] {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: var(--background-color) !important;
+    padding: 1rem !important;
+    z-index: 100 !important;
+    max-width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* 指标展示卡片 */
+.metric-card {
+    background: var(--primary-color);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin: 0.5rem 0;
+}
+
+/* 加载动画 */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.loading-animation {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* 进度条容器 */
+.progress-container {
+    background: #f0f2f6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    border: 1px solid #e0e0e0;
+}
+
+/* 状态指示器 */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+}
+
+.status-indicator.active {
+    background: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateX(10px);
+}
+
+/* 代码块样式优化 */
+.stMarkdown pre {
+    background-color: #1e1e1e !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    margin: 1rem 0 !important;
+    overflow-x: auto !important;
+}
+
+/* 数据表格容器 */
+.dataframe-container {
+    background: var(--primary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    overflow: hidden; /* 防止内容溢出 */
+}
+
+/* 确保下载按钮样式与容器匹配 */
+.dataframe-container .stDownloadButton {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* 优化数据表格内部样式 */
+.dataframe-container [data-testid="stDataFrame"] {
+    width: 90% !important;
+    margin: 1rem 0;
+}
+
+/* 消息动画 */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-animation {
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+/* DataFrame 容器样式 */
+[data-testid="stDataFrame"] {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem auto;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    max-width: 800px;
+    width: fit-content;
+}
+
+/* DataFrame 表格样式 */
+[data-testid="stDataFrame"] table {
+    width: auto !important;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+/* DataFrame 单元格样式 */
+[data-testid="stDataFrame"] td,
+[data-testid="stDataFrame"] th {
+    padding: 6px 12px !important;
+    border: 1px solid #eee;
+    white-space: nowrap;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 数值列样式 */
+[data-testid="stDataFrame"] td[data-type="numeric"] {
+    text-align: left;
+    font-family: monospace;
+    padding-right: 16px !important;
+}
+
+/* DataFrame 表头样式 */
+[data-testid="stDataFrame"] th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    text-align: center;
+    padding: 8px 12px !important;
+}
+
+/* DataFrame 容器展开器样式 */
+.streamlit-expanderHeader {
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+/* DataFrame 下载按钮容器样式 */
+[data-testid="stDownloadButton"] {
+    margin: 1rem auto !important;
+    display: block !important;
+    width: fit-content !important;
+}
+
+/* DataFrame 统计信息容器样式 */
+.dataframe-stats {
+    max-width: 700px;
+    margin: 1rem auto;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+} 

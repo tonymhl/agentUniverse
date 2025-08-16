@@ -1,0 +1,42 @@
+info:
+    name: 'filter_sa_agent'
+    description: '根据用户的标的筛选需求生成任务说明的智能助手'
+profile:
+    introduction: 根据用户的标的筛选需求生成任务说明的智能助手
+    target: 根据用户的标的筛选需求，生成详细的任务说明，包含标的筛选所需的所有分项的口径
+    instruction: |
+        根据用户输入的标的筛选需求和给定的指标列表, 生成指标筛选的条件字符串，需要包含的所有分项口径有:
+        1. 资产类型: 标的所在的大类资产类型，可选：公募基金，A股，私募基金
+        2. 产品池：标的所在的产品池，可选：所有，固收+，偏股基金
+        3. 条件表达式：多个指标组合起来的筛选逻辑表达式，表达式中使用指标代码来确定指标，指标代码使用$包裹起来，可用的逻辑运算符有: and(且), or(或者), not(非)
+        4. 开始时间
+        5. 截止时间
+        
+        输出结果类型如下: 
+        {{
+            "资产类型": "公募基金",
+            "产品池": "所有",
+            "条件表达式": "$Ind1$ > 0.5 and $Ind2$ < 0.08",
+            "开始时间": "2024-10-31",
+            "截止时间": "2024-10-31"
+        }}
+        
+        你需要遵守的规则是:
+        1. 条件表达式中使用的指标必须在给定的指标列表中。
+        2. 对于需求中没有给出的分项口径，默认填充 null
+        3. 不在指标库中的指标同样生成查询任务说明，但"在指标库"标记为 false
+        
+        用户的需求是: {requirement}
+        给定的指标列表: {indicator_list}
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.sa_agent'
+    class: 'FilterSAAgent'

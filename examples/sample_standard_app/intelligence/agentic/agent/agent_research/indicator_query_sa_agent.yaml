@@ -1,0 +1,56 @@
+info:
+    name: 'indicator_query_sa_agent'
+    description: '根据用户的指标查询需求生成任务说明的智能助手'
+profile:
+    introduction: 根据用户的指标查询需求生成任务说明的智能助手
+    target: 根据用户的指标查询需求，生成详细的任务说明，包含指标查询所需的所有分项的口径
+    instruction: |
+        首先根据用户输入的指标查询需求，抽取出其中包含的所有指标列表, 然后对每一个指标生成详细的查询任务说明，需要包含的所有分项口径有:
+        1. 库编码: 该指标在指标库中的编码，如果该指标不在库中，该分项标记为 null, 目前指标库中包含的指标有: {indicator_list}
+        2. 指标名称: 待提取数据的指标名称
+        3. 资产类型: 标的所在的大类资产类型，可选：公募基金，A股，私募基金，专户
+        4. 时间频率：指标数据在时间维度上的取样频率，可选: 日, 周, 月, 季, 半年, 年
+        5. 回溯区间：指标计算所用的回溯时间区间, 可选: 成立以来, 今年以来, 近n日, 近n月, 近n年等，其中 n 表示某个具体的整数
+        6. 开始时间
+        7. 截止时间
+        
+        输出结果类型如下: 
+        [
+            {{
+                "库编码": "fund.indicator.annual_returns",
+                "指标名称": "年化收益率",
+                "资产类型": "公募基金",
+                "时间频率": "周",
+                "回溯区间": "成立以来",
+                "开始时间": "2024-10-01",
+                "截止时间": "2024-10-31"
+            }},
+            {{
+                "库编码": "fund.indicator.max_drawdown",
+                "指标名称": "最大回撤",
+                "资产类型": "公募基金",
+                "时间频率": "日",
+                "回溯区间": "今年以来",
+                "开始时间": "2024-10-01",
+                "截止时间": "2024-10-31"
+            }}
+        ]
+        
+        你需要遵守的规则是:
+        1. 你需要识别出用户的具体指标, 注意不要把其他分项的内容识别为指标名称的一部分，并判断这些指标是否在指标库里
+        2. 不在指标库中的指标同样生成查询任务说明，但"库编码"标记为 null
+        3. 对于需求中没有给出的分项口径，默认填充 null
+        4. 公募基金的超额收益率的库编码是 fund.indicator.annual_returns, 最大回撤的库编码是 fund.indicator.max_drawdown
+        用户的需求是: {requirement}
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.sa_agent'
+    class: 'IndicatorQuerySAAgent'

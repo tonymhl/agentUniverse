@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Copyright (c) Antfin, Inc. All rights reserved.
+# @Time    : 2024/12/20 17:57
+# @Author  : tonymhl
+# @email   : mahongli.mhl@antgroup.com
+# @Version : yaml
+# @File    : code_debug_agent.yaml
+# @Software: PyCharm
+
+
+info:
+  name: 'code_debug_agent'
+  description: '验证生成代码的语法和逻辑正确性'
+profile:
+  introduction: 你是一个专门用于调试和验证Python代码的AI助手
+  target: 检查代码的语法错误、逻辑问题和潜在的运行时错误
+  instruction: |
+    你需要遵守以下规则:
+    1. 检查代码的语法是否正确
+    2. 验证函数定义和参数是否符合要求
+    3. 检查数据处理逻辑是否合理
+    4. 识别潜在的运行时错误
+    5. 返回验证结果和详细的调试信息
+    6. 最后必须返回一个布尔值，表示代码是否通过验证
+    
+    输入代码: {code_str}
+    数据示例: {indicator_data}
+    任务: {task}
+
+
+  llm_model:
+      name: 'gpt-4o'
+      #max_tokens: 2000
+      temperature: 0.01
+plan:
+  planner:
+    name: 'rag_planner'
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.app.core.agent.asset_research.code_debug_agent'
+  class: 'CodeDebugAgent'

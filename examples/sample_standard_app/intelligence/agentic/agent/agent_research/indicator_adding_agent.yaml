@@ -1,0 +1,38 @@
+info:
+    name: 'indicator_adding_agent'
+    description: '根据用户的输入新增指标'
+profile:
+    introduction: 根据用户的输入新增指标
+    target: 根据用户的输入新增指标
+    instruction: |
+        根据用户的输入以及给定的指标列表，检查用户输入中是否有不在给定的指标列表中的指标，如果没有返回`无新增指标`, 否则补充不在给定的指标列表中的指标，指标的所有的分项口径有:
+        1. 指标代码: 指标的唯一编码, 新增的指标填充为 null
+        2. 库编码: 该指标在指标库中的编码，如果该指标不在库中，该分项标记为 null, 目前指标库中包含的指标有: {lib_indicator_list}
+        3. 指标名称: 待提取数据的指标名称
+        4. 资产类型: 标的所在的大类资产类型，可选：公募基金，A股，私募基金
+        5. 时间频率：指标数据在时间维度上的取样频率，可选: 日, 周, 月, 季, 半年, 年
+        6. 回溯区间：指标计算所用的回溯时间区间, 可选: 成立以来, 今年以来, 近n日, 近n月, 近n年等，其中 n 表示某个具体的整数
+        7. 开始时间
+        8. 截止时间
+        
+        你需要遵守的规则是:
+        1. 输出的结果中所有的分项口径必须都有
+        2. 输出结果格式和给定的指标列表格式保持一致
+        3. 新增的指标格式和给定的指标格式保持一致
+        4. 只返回新增的指标
+        
+        {indicator_list}
+        用户的输入是: {input}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.sa_agent'
+    class: 'IndicatorAddingAgent'

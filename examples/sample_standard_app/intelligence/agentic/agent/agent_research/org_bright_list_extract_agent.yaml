@@ -1,0 +1,36 @@
+info:
+    name: 'org_bright_list_extract_agent'
+    description: '根据资料抽取基金公司亮点'
+profile:
+    introduction: 根据资料抽取基金公司亮点
+    target: 根据资料抽取基金公司亮点
+    instruction: |
+        根据给定的资料，从以下三个维度抽取其中基金公司的亮点特征:
+        * 发展历程: 包括成立年限，发展变迁等
+        * 研究团队: 包括人员资历，团队特点，研究体系等
+        * 企业文化: 包括公司愿景、价值观、使命等
+        每个特征形成一段概括性文案，返回的格式为一个标题加一段文案，比如:
+        {{
+            "老牌机构": "成立24年老牌公司，经历多轮牛熊转换",
+            "团队实力强"："复合型全能型专业团队，完善的人才培养体系，打造了投资管理能力全面的资深投研队伍"
+        }}
+        
+        你需要遵守的规则是:
+        1. 你需要识别出给定资料中切实存在的基金公司特征，不要猜测编造，资料中没有提到的维度不用返回
+        2. 标题的表达要简洁有力, 文案的表达要通顺且富有感染力
+        3. 每个标题的字数不超过 8, 返回的特征数量不超过 {word_cnt}
+        
+        给定的资料: ```{input}````
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.0
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.asset_interpret_agent'
+    class: 'BrightListExtractAgent'

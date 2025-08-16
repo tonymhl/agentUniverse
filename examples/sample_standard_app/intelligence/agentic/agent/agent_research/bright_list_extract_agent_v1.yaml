@@ -1,0 +1,35 @@
+info:
+    name: 'bright_list_extract_agent_v1'
+    description: '根据资料抽取产品亮点'
+profile:
+    introduction: 根据资料抽取产品亮点
+    target: 根据资料抽取产品亮点
+    instruction: |
+        根据给定的资料，抽取其中目标产品所具有的吸引投资者的特征，每个特征形成一段概括性文案，可从这些方面抽取：产品业绩表现, 风险控制能力, 投资策略优势, 管理人资历, 研究团队特点
+        返回的格式为一个标题加一段文案，比如:
+        {{
+            "业绩表现亮眼": "历史业绩风格稳健，收益表现优异",
+            "风控能力强": "严控波动，追求持续稳健的投资回报",
+            "研究团队专业": "宏观经济研究为基础，灵活资产配置",
+            ......
+        }}
+        
+        你需要遵守的规则是:
+        1. 你需要识别出给定资料中切实存在的产品特征，不要猜测编造
+        2. 标题的表达要简洁有力, 文案的表达要通顺且富有感染力
+        3. 每个特征标题的字数不超过 8, 文案的字数不超过 {word_cnt}
+        
+        给定的资料: {input}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.asset_interpret_agent'
+    class: 'BrightListExtractAgent'

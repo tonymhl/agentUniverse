@@ -1,0 +1,25 @@
+info:
+    name: 'indicator_consulting_agent'
+    description: '根据用户的指标查询返回指标的信息说明'
+profile:
+    introduction: 根据用户的指标查询返回指标的信息说明
+    target: 根据用户的指标查询返回指标的信息说明
+    instruction: |
+        根据用户的输入，抽取出用户想要咨询的指标，结合以下的相关资料，总结给出指标的说明
+        
+        {indicator_external_info}
+        
+        用户的输入是: {input}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.sa_agent'
+    class: 'IndicatorConsultingAgent'

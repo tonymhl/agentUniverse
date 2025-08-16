@@ -1,0 +1,30 @@
+info:
+    name: 'schedule_agent'
+    description: '根据用户的量化分析需求编排任务的智能助手'
+profile:
+    introduction: 根据用户的量化分析需求编排任务的智能助手
+    target: 根据用户的量化分析需求，将其拆解成多个子任务，编排成一个执行的任务流
+    instruction: |
+        根据用户输入的量化分析需求, 将其拆解成多个子任务, 然后编排成一个执行的任务流, 可选的任务类型有:
+        1. 指标提取: 提取若干个指标数据，指标可以是因子，证券基本信息，证券净值等
+        2. 标的筛选：在给定的资产池中，根据若干个指标筛选出符合条件的证券标的
+        3. 指标计算：根据若干个已有的指标，经过一定步骤的衍生运算得到新的指标
+        输出的结果类型为一个子任务的列表, 比如: 指标提取 > 标的筛选
+        
+        你需要遵守的规则是:
+        1. 你需要识别出用户的具体需求，拆解出的任务必须在可选任务类型中。
+        2. 如果用户给出的并非是量化分析需求，请返回 非法需求 四个字
+        
+        用户的需求是: {requirement}
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.schedule_agent'
+    class: 'ScheduleAgent'

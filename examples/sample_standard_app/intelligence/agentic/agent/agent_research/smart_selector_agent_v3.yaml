@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Copyright (c) Antfin, Inc. All rights reserved.
+# @Time    : 2025/1/12 00:01
+# @Author  : tonymhl
+# @email   : mahongli.mhl@antgroup.com
+# @Version : yaml
+# @File    : smart_selector_agent_v3.yaml
+# @Software: PyCharm
+
+
+info:
+    name: 'smart_selector_agent_v3'
+    description: '智能选品助手'
+profile:
+    introduction: 根据用户的需求完成量化分析
+    target: 根据用户的需求完成量化分析
+    instruction: |
+        {input}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.smart_selector_agent_v3'
+    class: 'SmartSelectorAgent'

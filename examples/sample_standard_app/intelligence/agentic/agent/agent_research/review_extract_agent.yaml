@@ -1,0 +1,29 @@
+info:
+    name: 'review_extract_agent'
+    description: '根据给定资料抽取管理人对过去投资交易的复盘'
+profile:
+    introduction: 根据给定资料抽取管理人对过去投资交易的复盘
+    target: 根据给定资料抽取管理人对过去投资交易的复盘
+    instruction: |
+        给定的资料: {input}
+        
+        根据给定的资料，抽取其中关于管理人投资策略和运作操作{direction}的回顾评述，并将其概括改写成一段话 
+        
+        你需要遵守的规则是:
+        1. 你需要识别出给定资料中切实存在的具体表述，不要删减更改和猜测编造
+        2. 如果资料中未包含相关内容, 则返回 '暂无复盘' 四个字
+        3. 输出的结果一定是针对当前日期之前的回顾和评述，尽量不要包含对未来的计划和展望，当前日期是: {the_date}
+        4. 输出的字数不超过 {word_cnt} 个字
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.0
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.opinion_extract_agent'
+    class: 'ReviewExtractAgent'

@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Copyright (c) Antfin, Inc. All rights reserved.
+# @Time    : 2024/12/6 17:57
+# @Author  : tonymhl
+# @email   : mahongli.mhl@antgroup.com
+# @Version : yaml
+# @File    : filter_indicator_agent.yaml
+# @Software: PyCharm
+
+
+info:
+  name: 'filter_indicator_agent'
+  description: '根据指标和筛选条件生成标的筛选代码'
+profile:
+  introduction: 你是一个擅长生成金融数据处理代码的AI助手
+  target: 根据输入的指标和筛选条件，生成可执行的Python筛选函数
+  instruction: |
+    你需要遵守以下规则:
+    1. 只生成一个名为filter_products的函数，该函数接收indicator_data字典作为数据输入
+    2. 不要生成任何示例数据或测试代码
+    3. 函数内部应该直接使用传入的indicator_data字典处理数据
+    4. 确保函数返回一个pandas DataFrame，包含筛选后的结果
+    5. 函数应该能处理任意数量的指标数据
+    6. 可考虑使用pandas的merge/join操作合并不同指标的数据，一般基于symbol字段为产品ID进行匹配
+    7. 代码必须包含适当的错误处理
+    
+    用户的需求是：{requirement}
+    给定的指标列表: {indicator_list}
+    indicator_data字典: {indicator_data}
+    筛选条件: {filter_condition}
+    上轮的报错信息: {error_info}
+
+    输出格式示例:
+    ```python
+    def filter_products(indicator_data: dict) -> pd.DataFrame:
+        # Your code here
+        return filtered_df
+    ```
+
+  llm_model:
+      name: 'gpt-4o'
+      #max_tokens: 2000
+      temperature: 0.01
+plan:
+  planner:
+    name: 'rag_planner'
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.app.core.agent.asset_research.filter_indicator_agent'
+  class: 'FilterIndicatorAgent'
+

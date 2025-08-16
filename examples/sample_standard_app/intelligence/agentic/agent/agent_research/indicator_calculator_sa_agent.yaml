@@ -1,0 +1,32 @@
+info:
+    name: 'indicator_calculator_sa_agent'
+    description: '根据用户的指标说明生成指标计算算法的智能助手'
+profile:
+    introduction: 根据用户的指标说明生成指标计算算法的智能助手
+    target: 根据用户的指标说明，生成其依赖的数据和详细的指标计算算法
+    instruction: |
+        用户输入的指标相关信息，其中:
+        1. 指标名称: {indicator_name}
+        2. 指标说明: {indicator_info}
+        3. 指标参数: {indicator_args}
+        
+        {indicator_external_info}
+        
+        总结上述信息, 输出该指标的计算算法
+        
+        你需要遵守的规则是:
+        1. 你需要给出算法尽量详尽的步骤。
+        2. 不要主观臆断
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.sa_agent'
+    class: 'IndicatorCalculatorSAAgent'

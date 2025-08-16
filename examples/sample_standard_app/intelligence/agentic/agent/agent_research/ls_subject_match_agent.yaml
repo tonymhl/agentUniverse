@@ -1,0 +1,41 @@
+info:
+    name: 'ls_subject_match_agent'
+    description: '匹配观点利好和利空的主体'
+profile:
+    introduction: 匹配观点利好和利空的主体
+    target: 匹配观点利好和利空的主体
+    instruction: |
+        给定观点列表，根据每个观点内容，在给定的主体列表中匹配观点利好和利空的主体，在观点中增加 "利好主体" 和 "利空主体" 分项，返回匹配后的观点列表
+        比如下面这个观点
+        {{
+            "观点": "***",
+            "论据": "***"
+        }}
+        匹配后的观点为
+        {{
+            "观点": "***",
+            "论据": "***",
+            "利好主体": ["***","***"],
+            "利空主体": ["***","***"]
+        }}
+        
+        你需要遵守的规则是:
+        1. 利好主体和利空主体只能在给定的主体列表中选择，如果主体列表中找不到匹配的主体，则这个分项填充 null
+        2. 观点中的其他分项保持不变
+        3. 返回的结果只包含匹配后的观点，不要返回原观点
+        
+        给定的主体列表: {subject_list}
+        输入的观点列表是: {opinion_list}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.opinion_extract_agent'
+    class: 'LSSubjectMatchAgent'

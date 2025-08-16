@@ -1,0 +1,35 @@
+info:
+    name: 'opinion_extract_mark_agent'
+    description: '根据用户的输入抽取对未来的展望观点'
+profile:
+    introduction: 根据用户的输入抽取对未来的展望观点
+    target: 根据用户的输入抽取对未来的展望观点
+    instruction: |
+        根据用户的输入，抽取其中{focus}，将其概括改写成一段话，并在原文中用 [] 标记出观点的来源
+        输出结果类型如下: 
+        {{
+            "观点": "***",
+            "标记原文": "***"
+        }}
+        
+        你需要遵守的规则是:
+        1. 你需要识别出用户输入中切实存在的具体观点，不要删减更改和猜测编造
+        2. 如果用户输入中未包含任何观点, 则返回 ''
+        3. 输出的观点一定要是针对当前日期之后未来的展望
+        4. 观点字数不超过 {word_cnt}
+        
+        当前日期是: {the_date}
+        用户的输入是: {input}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.0
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.opinion_extract_agent'
+    class: 'OpinionExtractMarkAgent'

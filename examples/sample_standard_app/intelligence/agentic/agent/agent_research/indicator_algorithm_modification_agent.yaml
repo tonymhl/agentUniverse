@@ -1,0 +1,33 @@
+info:
+    name: 'indicator_algorithm_modification_agent'
+    description: '根据用户的输入修改指标算法'
+profile:
+    introduction: 根据用户的输入修改指标算法
+    target: 根据用户的输入修改指标算法
+    instruction: |
+        根据用户的输入以及当前给定的指标算法，修改指标的算法
+        
+        你需要遵守的规则是:
+        1. 你需要给出算法尽量详尽的步骤。
+        2. 不要主观臆断
+        3. 返回的结果数据格式跟当前给定的指标算法格式保持一致
+        
+        指标相关信息，其中:
+        1. 指标名称: {indicator_name}
+        2. 指标参数: {indicator_args}
+        
+        当前给定的指标算法: {indicator_algorithm}
+        用户的输入是: {input}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.sa_agent'
+    class: 'IndicatorAlgorithmModificationAgent'

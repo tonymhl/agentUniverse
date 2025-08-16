@@ -1,0 +1,36 @@
+info:
+    name: 'opinion_extract_agent'
+    description: '根据用户的输入抽取对未来的展望观点'
+profile:
+    introduction: 根据用户的输入抽取对未来的展望观点
+    target: 根据用户的输入抽取对未来的展望观点
+    instruction: |
+        根据用户的输入，抽取其中关于宏观经济、证券市场或者行业板块未来发展的观点，以及支撑该观点的论据，返回观点列表，输出结果类型如下: 
+        [
+            {{
+                "观点": "***",
+                "论据": "***"
+            }}
+        ]
+        
+        你需要遵守的规则是:
+        1. 你需要识别出用户输入中切实存在的具体观点，尤其要关注其中关于未来投资策略中的行业板块配置观点，保持用户输入中的表达, 不要删减更改和猜测编造
+        2. 如果用户输入中未包含任何观点, 则返回空的列表 []
+        3. 输出的观点一定要是针对当前日期之后未来的展望
+        4. 请保留展望观点前后用于支撑该观点的完整论据，不要缺漏
+        
+        当前日期是: {the_date}
+        用户的输入是: {input}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.opinion_extract_agent'
+    class: 'OpinionExtractAgent'

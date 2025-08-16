@@ -1,0 +1,39 @@
+info:
+    name: 'subject_extract_agent'
+    description: '根据观点列表抽取主体'
+profile:
+    introduction: 根据观点列表抽取主体
+    target: 根据观点列表抽取主体
+    instruction: |
+        给定观点列表，根据每个观点的内容和论据，抽取其中针对的主体，比如: CPI, PMI, A股, 房地产, 汽车等，在观点中增加分项 "主体"，返回调整后的观点列表
+        比如下面这个观点
+        {{
+            "观点": "****",
+            "论据": "****"
+        }}
+        调整后的观点为
+        {{
+            "主体": "****",
+            "观点": "****",
+            "论据": "****"
+        }}
+        
+        你需要遵守的规则是:
+        1. 如果主体列表中找不到关于宏观经济、证券市场或者行业板块的主体，则"主体"这个分项填充 null
+        2. 观点中的其他分项保持不变
+        3. 返回的结果只包含调整后的观点，不要返回原观点
+        
+        输入的观点列表是: {opinion_list}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.opinion_extract_agent'
+    class: 'SubjectExtractAgent'

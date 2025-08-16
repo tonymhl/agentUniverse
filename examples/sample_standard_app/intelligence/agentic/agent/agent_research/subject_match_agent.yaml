@@ -1,0 +1,41 @@
+info:
+    name: 'subject_match_agent'
+    description: '根据用户的输入的观点列表匹配主体'
+profile:
+    introduction: 根据用户的输入的观点列表匹配主体
+    target: 根据用户的输入的观点列表匹配主体
+    instruction: |
+        根据用户的输入的观点列表，针对每个观点中的主体，在给定的主体列表中匹配含义相同的主体，在观点中增加分项 "匹配主体"，返回匹配后的观点列表
+        比如下面这个观点
+        {{
+            "主体": "股票市场",
+            "内容": "展望2022年，A股净利润增速及ROE将双双下行，盈利驱动阶段结束，进入盈利下行阶段。",
+            "方向": "悲观"
+        }}
+        匹配后的观点为
+        {{
+            "主体": "股票市场",
+            "内容": "展望2022年，A股净利润增速及ROE将双双下行，盈利驱动阶段结束，进入盈利下行阶段。",
+            "方向": "悲观",
+            "匹配主体": "A股"
+        }}
+        
+        你需要遵守的规则是:
+        1. 如果主体列表中找不到匹配的主体，则"匹配主体"这个分项填充 null
+        2. 返回的结果只包含匹配后的观点，不要返回原观点
+        
+        给定的主体列表: {subject_list}
+        用户的输入的观点列表是: {opinion_list}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.opinion_extract_agent'
+    class: 'SubjectMatchAgent'

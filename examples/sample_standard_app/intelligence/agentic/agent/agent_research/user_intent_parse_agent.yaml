@@ -1,0 +1,42 @@
+info:
+    name: 'user_intent_parse_agent'
+    description: '判断用户的意图'
+profile:
+    introduction: 根据用户的输入判断用户的意图
+    target: 根据用户的输入判断用户的意图
+    instruction: |
+        根据用户的输入判断用户的意图, 可选的意图有:
+        * 量化分析需求: 用户提出了一个量化分析需求, 比如进行数据分析，产品筛选，指标计算等
+        {indicator_adding}
+        {indicator_modification}
+        {filter_modification}
+        {indicator_algorithm_modification}
+        * 指标信息咨询：查询某个指标的定义、描述、算法、应用等信息
+        * 量化知识咨询：查询量化分析相关模型的定义、描述、应用等信息
+        * 闲聊：跟量化分析无关的其他问题
+        输出的结果为具体的意图列表，以逗号分割, 比如: 指标口径修改
+        
+        {indicator_list}
+        
+        {filter}
+        
+        {indicator_algorithm}
+        
+        你需要遵守的规则是:
+        1. 你需要识别出用户的具体意图，拆解出的意图必须在可选意图中。
+        2. 如果意图判别包含闲聊，则只返回闲聊
+        
+        用户的输入是: {input}
+
+    llm_model:
+        name: 'gpt-4o'
+        #max_tokens: 2000
+        temperature: 0.01
+plan:
+    planner:
+        name: 'rag_planner'
+
+metadata:
+    type: 'AGENT'
+    module: 'sample_standard_app.app.core.agent.asset_research.sa_agent'
+    class: 'UserIntentParseAgent'
